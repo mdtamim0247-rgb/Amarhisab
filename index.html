@@ -47,7 +47,7 @@
 <section id="remittance" class="page"><div class="panel p-5 mb-4 bg-blue-800 text-white"><p class="text-sm text-blue-100">মোট দেশে পাঠানো</p><div id="remitTotal" class="text-2xl font-bold text-amber-300">৳ ০</div><p id="remitSarTotal" class="text-xs mt-1">০ SAR</p><button class="btn gold mt-4" onclick="openRemit()">+ টাকা পাঠানোর হিসাব</button></div><div id="remitList" class="space-y-2"></div></section>
 <section id="loans" class="page"><div class="grid grid-cols-2 gap-3 mb-4"><div class="panel p-4"><p class="text-xs text-rose-600">আমি দেবো</p><b id="payable" class="text-xl text-rose-700">৳ ০</b></div><div class="panel p-4"><p class="text-xs text-emerald-600">আমি পাবো</p><b id="receivable" class="text-xl text-emerald-700">৳ ০</b></div></div><button class="btn gold mb-3" onclick="openLoan()">+ ধার/দেনা যোগ করুন</button><div id="loanList" class="space-y-2"></div></section>
 <section id="reports" class="page"><div class="panel p-5 mb-4"><h2 class="font-bold mb-3">হিসাবের সারাংশ</h2><div id="reportStats" class="space-y-3"></div></div><div class="panel p-4 mb-4"><h2 class="font-bold mb-2">ডেটা ব্যাকআপ</h2><p class="text-xs text-slate-500 mb-3">ফোনে JSON ব্যাকআপ ডাউনলোড করুন বা আগে নেওয়া ব্যাকআপ ফিরিয়ে আনুন। ক্লাউড ব্যাকআপের জন্য Firebase সেটআপ প্রয়োজন।</p><div class="grid grid-cols-2 gap-2"><button class="btn soft" onclick="exportData()">JSON ডাউনলোড</button><button class="btn soft" onclick="document.getElementById('importFile').click()">ব্যাকআপ ফিরিয়ে আনুন</button></div><input type="file" id="importFile" accept=".json,application/json" class="hidden" onchange="importData(event)"><button class="btn primary w-full mt-3" onclick="copyReport()">রিপোর্ট কপি</button></div>
-<div class="panel p-4"><h2 class="font-bold mb-2">অনলাইন ব্যাকআপ</h2><p class="text-xs text-slate-500 mb-3">Firebase Email/Password sign-in চালু করে কনফিগারেশন যোগ করলে একই অ্যাকাউন্টে লগইন করে ক্লাউডে সিঙ্ক করা যাবে।</p><div id="cloudStatus" class="text-xs mb-3 text-amber-700">ক্লাউড কনফিগারেশন যোগ করা হয়নি</div><div class="grid grid-cols-2 gap-2"><button class="btn soft" onclick="cloudSignIn()">লগইন / সাইন আপ</button><button class="btn primary" onclick="cloudSync()">এখনই ব্যাকআপ</button></div><button class="btn danger w-full mt-2" onclick="toggleDark()">ডার্ক মোড চালু/বন্ধ</button></div></section>
+<div class="panel p-4"><h2 class="font-bold mb-2">অনলাইন ব্যাকআপ</h2><p class="text-xs text-slate-500 mb-3">Firebase Firestore ক্লাউড কানেক্টেড আছে। ডেটা স্বয়ংক্রিয়ভাবে ক্লাউডে ব্যাকআপ থাকে।</p><div id="cloudStatus" class="text-xs mb-3 text-emerald-600 font-bold">● ক্লাউড সিঙ্ক চালু আছে</div><div class="grid grid-cols-2 gap-2"><button class="btn soft" onclick="cloudRestore()">ক্লাউড থেকে আনুন</button><button class="btn primary" onclick="cloudSync()">এখনই ব্যাকআপ</button></div><button class="btn danger w-full mt-2" onclick="toggleDark()">ডার্ক মোড চালু/বন্ধ</button></div></section>
 </main>
 <nav class="nav"><button class="active" data-tab="home" onclick="tab('home')"><i data-lucide="house"></i>হোম</button><button data-tab="transactions" onclick="tab('transactions')"><i data-lucide="book-open"></i>আয়-ব্যয়</button><button data-tab="remittance" onclick="tab('remittance')"><i data-lucide="send"></i>দেশে টাকা</button><button data-tab="loans" onclick="tab('loans')"><i data-lucide="handshake"></i>ধার-দেনা</button><button data-tab="reports" onclick="tab('reports')"><i data-lucide="chart-no-axes-column"></i>রিপোর্ট</button></nav>
 </div>
@@ -56,6 +56,62 @@
 <div id="loanModal" class="modal"><div class="sheet"><div class="flex justify-between mb-4"><h2 class="text-lg font-bold">ধার/দেনা যোগ করুন</h2><button onclick="closeModal('loanModal')"><i data-lucide="x"></i></button></div><form id="loanForm" class="space-y-3"><div><label>ব্যক্তির নাম</label><input class="field" id="lPerson" required></div><div><label>ধরন</label><select class="field" id="lType"><option value="taken">আমি দেবো (দেনা)</option><option value="given">আমি পাবো (পাওনা)</option></select></div><div class="grid grid-cols-2 gap-3"><div><label>পরিমাণ (BDT)</label><input class="field" id="lAmount" type="number" min=".01" required></div><div><label>তারিখ</label><input class="field" id="lDate" type="date" required></div></div><div><label>নোট</label><input class="field" id="lNote"></div><button class="btn primary w-full">সেভ করুন</button></form></div></div>
 <div id="rateModal" class="modal"><div class="sheet"><div class="flex justify-between mb-4"><h2 class="font-bold">রিয়াল রেট পরিবর্তন</h2><button onclick="closeModal('rateModal')"><i data-lucide="x"></i></button></div><label>১ SAR = কত BDT?</label><input class="field mb-4" id="newRate" type="number" min=".01" step=".01"><button class="btn primary w-full" onclick="saveRate()">রেট সেভ করুন</button></div></div>
 <div id="toast" class="toast"></div>
+
+<!-- Firebase SDK Imports -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyDN_ga3uIEw52naGv9fXGcIPRfZQVIAeQQ",
+    authDomain: "amarhisab-61931.firebaseapp.com",
+    projectId: "amarhisab-61931",
+    storageBucket: "amarhisab-61931.firebasestorage.app",
+    messagingSenderId: "123707523972",
+    appId: "1:123707523972:web:7bcc7657ebea301a87d3d1",
+    measurementId: "G-YZZ6TSEMG8"
+  };
+
+  const app = initializeApp(FIREBASE_CONFIG);
+  const db = getFirestore(app);
+
+  window.firebaseSync = async function(data) {
+    try {
+      await setDoc(doc(db, "hisab_data", "current"), data);
+      console.log("Firebase sync successful");
+    } catch (e) {
+      console.error("Firebase sync error:", e);
+    }
+  };
+
+  window.cloudSync = async function() {
+    try {
+      toast("ক্লাউডে ব্যাকআপ নেওয়া হচ্ছে...");
+      await setDoc(doc(db, "hisab_data", "current"), state);
+      toast("ক্লাউড ব্যাকআপ সফল হয়েছে!");
+    } catch (e) {
+      alert("ব্যাকআপ করতে সমস্যা হয়েছে। Firebase Rules চেক করুন।");
+    }
+  };
+
+  window.cloudRestore = async function() {
+    try {
+      toast("ক্লাউড থেকে ডেটা আনা হচ্ছে...");
+      const docSnap = await getDoc(doc(db, "hisab_data", "current"));
+      if (docSnap.exists()) {
+        state = docSnap.data();
+        localStorage.setItem(KEY, JSON.stringify(state));
+        render();
+        toast("ক্লাউড থেকে সফলভাবে ডেটা লোড হয়েছে!");
+      } else {
+        toast("ক্লাউডে কোনো ব্যাকআপ ডেটা পাওয়া যায়নি");
+      }
+    } catch (e) {
+      alert("ডেটা লোড করতে সমস্যা হয়েছে");
+    }
+  };
+</script>
+
 <script>
 const KEY='amar_hisab_upgrade_v3';
 const DEFAULT={version:3,rate:32.82,currency:'SAR',transactions:[
@@ -82,7 +138,7 @@ loans:[
 ].map((x,i)=>({id:'ln_'+(i+1),person:x[0],type:'taken',amountBDT:x[1],paidBDT:0,date:'2026-05-01',note:''}))};
 let state=load();
 function load(){try{let x=JSON.parse(localStorage.getItem(KEY));if(x&&x.version===3)return x}catch(e){}return structuredClone(DEFAULT)}
-function save(){localStorage.setItem(KEY,JSON.stringify(state));render()}
+function save(){localStorage.setItem(KEY,JSON.stringify(state));render();if(window.firebaseSync)window.firebaseSync(state)}
 function bn(n,d=0){return (Number(n)||0).toLocaleString('bn-BD',{minimumFractionDigits:d,maximumFractionDigits:d})}
 function money(sar,bdt){return state.currency==='SAR'?bn(sar,2)+' SAR':'৳ '+bn(bdt??sar*state.rate)}
 function bdtOf(t){return Number(t.amountBDT??t.amountSAR*state.rate)}
@@ -118,22 +174,10 @@ function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader
 function copyReport(){let s=`আমার হিসাব\nমোট আয়: ${document.getElementById('sumIncome').textContent}\nমোট খরচ: ${document.getElementById('sumExpense').textContent}\nমোট রেমিট্যান্স: ${document.getElementById('sumRemit').textContent}\nদেনা: ${document.getElementById('payable').textContent}\nপাওনা: ${document.getElementById('receivable').textContent}`;navigator.clipboard?.writeText(s).then(()=>toast('রিপোর্ট কপি হয়েছে')).catch(()=>prompt('রিপোর্ট কপি করুন',s))}
 function toggleDark(){document.documentElement.classList.toggle('dark');localStorage.setItem('amar-dark',document.documentElement.classList.contains('dark')?'1':'0')}
 function filterTx(f){let all=state.transactions.filter(selected);if(f!=='all')all=all.filter(t=>t.type===f);document.getElementById('txList').innerHTML=all.sort((a,b)=>b.date.localeCompare(a.date)).map(t=>txCard(t,true)).join('')||empty('কোনো লেনদেন নেই');lucide.createIcons()}
-// Cloud sync intentionally requires user-owned Firebase project config and Firebase SDK files.
-// Replace the placeholders below, then include Firebase modular SDK imports in a module script.
-const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyDN_ga3uIEw52naGv9fXGcIPRfZQVIAeQQ",
-  authDomain: "amarhisab-61931.firebaseapp.com",
-  projectId: "amarhisab-61931",
-  storageBucket: "amarhisab-61931.firebasestorage.app",
-  messagingSenderId: "123707523972",
-  appId: "1:123707523972:web:7bcc7657ebea301a87d3d1",
-  measurementId: "G-YZZ6TSEMG8"
-};
-function cloudReady(){return !FIREBASE_CONFIG.apiKey.startsWith('PASTE_')}
-function cloudSignIn(){if(!cloudReady()){alert('Firebase configuration required.')}}
-function cloudSync(){if(!cloudReady()){alert('Firebase configuration required.')}}
+
 if(localStorage.getItem('amar-dark')==='1')document.documentElement.classList.add('dark');
 render();
 </script>
 </body>
 </html>
+```[span_2](start_span)[span_2](end_span)
