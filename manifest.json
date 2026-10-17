@@ -1,0 +1,17 @@
+{
+  "name": "Amar Hisab",
+  "short_name": "AmarHisab",
+  "start_url": "/Amarhisab/",
+  "display": "standalone",
+  "background_color": "#064e3b",
+  "theme_color": "#064e3b",
+  "description": "প্রবাসী ফিন্যান্স ট্র্যাকার",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2454/2454282.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
