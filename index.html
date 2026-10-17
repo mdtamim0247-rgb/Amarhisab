@@ -120,11 +120,20 @@ function toggleDark(){document.documentElement.classList.toggle('dark');localSto
 function filterTx(f){let all=state.transactions.filter(selected);if(f!=='all')all=all.filter(t=>t.type===f);document.getElementById('txList').innerHTML=all.sort((a,b)=>b.date.localeCompare(a.date)).map(t=>txCard(t,true)).join('')||empty('কোনো লেনদেন নেই');lucide.createIcons()}
 // Cloud sync intentionally requires user-owned Firebase project config and Firebase SDK files.
 // Replace the placeholders below, then include Firebase modular SDK imports in a module script.
-const FIREBASE_CONFIG={apiKey:"PASTE_YOUR_FIREBASE_API_KEY",authDomain:"PASTE_PROJECT.firebaseapp.com",projectId:"PASTE_PROJECT_ID",appId:"PASTE_YOUR_APP_ID"};
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDN_ga3uIEw52naGv9fXGcIPRfZQVIAeQQ",
+  authDomain: "amarhisab-61931.firebaseapp.com",
+  projectId: "amarhisab-61931",
+  storageBucket: "amarhisab-61931.firebasestorage.app",
+  messagingSenderId: "123707523972",
+  appId: "1:123707523972:web:7bcc7657ebea301a87d3d1",
+  measurementId: "G-YZZ6TSEMG8"
+};
 function cloudReady(){return !FIREBASE_CONFIG.apiKey.startsWith('PASTE_')}
-function cloudSignIn(){if(!cloudReady()){alert('অনলাইন ব্যাকআপ চালু করতে README-তে দেওয়া Firebase সেটআপ শেষ করে এই HTML-এর FIREBASE_CONFIG পূরণ করতে হবে।');return}alert('Firebase SDK ও Authentication handler যুক্ত করার পর লগইন চালু হবে।')}
-function cloudSync(){if(!cloudReady()){alert('এখনো Firebase কনফিগারেশন দেওয়া হয়নি। আগে README অনুসরণ করুন।');return}alert('এই প্যাকেজে ক্লাউড সিঙ্কের নিরাপদ কনফিগারেশন পয়েন্ট প্রস্তুত। Firebase SDK handler সেটআপ সম্পন্ন হলে সিঙ্ক ব্যবহার করা যাবে।')}
+function cloudSignIn(){if(!cloudReady()){alert('Firebase configuration required.')}}
+function cloudSync(){if(!cloudReady()){alert('Firebase configuration required.')}}
 if(localStorage.getItem('amar-dark')==='1')document.documentElement.classList.add('dark');
 render();
 </script>
-</body></html>
+</body>
+</html>
