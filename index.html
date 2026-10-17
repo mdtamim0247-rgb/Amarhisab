@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#064e3b">
 <title>আমার হিসাব | Amar Hisab</title>
- <link rel="manifest" href="manifest.json">
+<link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
@@ -16,8 +16,8 @@
 .hero{background:linear-gradient(135deg,#052e2b,#065f46 55%,#10b981);color:white;padding:22px 18px 58px;border-radius:0 0 30px 30px}
 .glass{background:#ffffff18;border:1px solid #ffffff24;backdrop-filter:blur(12px)}
 .panel{background:white;border:1px solid #e2e8f0;border-radius:20px;box-shadow:0 8px 24px #0f172a08}
-.money{font-variant-numeric:tabular-nums}.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,480px);background:#ffffffed;backdrop-filter:blur(14px);border-top:1px solid #e2e8f0;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 4px max(8px,env(safe-area-inset-bottom));z-index:20}
-.nav button{font-size:11px;color:#94a3b8;display:flex;align-items:center;flex-direction:column;gap:3px;padding:5px 0}.nav button.active{color:#047857;font-weight:700}
+.money{font-variant-numeric:tabular-nums}.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,480px);background:#ffffffed;backdrop-filter:blur(14px);border-top:1px solid #e2e8f0;display:grid;grid-template-columns:repeat(6,1fr);padding:8px 4px max(8px,env(safe-area-inset-bottom));z-index:20}
+.nav button{font-size:10px;color:#94a3b8;display:flex;align-items:center;flex-direction:column;gap:3px;padding:5px 0}.nav button.active{color:#047857;font-weight:700}
 .page{display:none;padding:0 16px 20px}.page.active{display:block;animation:fade .2s ease}@keyframes fade{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:none}}
 .btn{border-radius:13px;padding:10px 12px;font-weight:700;font-size:13px;transition:.15s}.btn:active{transform:scale(.98)}.primary{background:#047857;color:white}.gold{background:#fbbf24;color:#172033}.soft{background:#ecfdf5;color:#065f46}.danger{background:#fff1f2;color:#be123c}.field{width:100%;border:1px solid #cbd5e1;border-radius:12px;padding:10px 12px;background:white;outline:none;font:inherit;font-size:14px}.field:focus{border-color:#10b981;box-shadow:0 0 0 3px #10b98120}label{display:block;font-size:12px;font-weight:600;color:#475569;margin-bottom:5px}.modal{position:fixed;inset:0;background:#020617a8;z-index:40;display:none;align-items:flex-end;justify-content:center;padding:0}.modal.show{display:flex}.sheet{background:white;border-radius:24px 24px 0 0;width:min(100%,480px);max-height:90dvh;overflow:auto;padding:22px 18px calc(22px + env(safe-area-inset-bottom))}.pill{font-size:11px;border-radius:999px;padding:4px 8px;background:#f1f5f9;color:#475569}.bar{height:8px;border-radius:99px;background:#e2e8f0;overflow:hidden}.bar>span{height:100%;display:block;border-radius:99px}.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#0f172a;color:white;border-radius:14px;padding:10px 15px;font-size:13px;z-index:60;box-shadow:0 8px 30px #0003;display:none;max-width:90vw}.dark body{background:#020617}.dark .app{background:#0f172a;color:#e2e8f0}.dark .panel,.dark .sheet{background:#172033;border-color:#334155;color:#e2e8f0}.dark .field{background:#0f172a;border-color:#334155;color:#e2e8f0}.dark .text-slate-800,.dark .text-slate-700,.dark .text-slate-600{color:#e2e8f0!important}.dark .nav{background:#0f172aee;border-color:#334155}.dark .bg-slate-50{background:#0f172a}.dark .bg-slate-100{background:#1e293b}.dark .border-slate-100,.dark .border-slate-200{border-color:#334155!important}
 </style>
@@ -26,7 +26,7 @@
 <div class="app">
 <header class="hero">
  <div class="flex items-center justify-between gap-3">
-  <div class="flex items-center gap-3"><div class="w-11 h-11 rounded-2xl glass flex items-center justify-center"><i data-lucide="wallet" class="text-amber-300"></i></div><div><h1 class="text-xl font-bold">আমার হিসাব</h1><p class="text-xs text-emerald-100">প্রবাসী ফিন্যান্স ট্র্যাকার</p></div></div>
+  <div class="flex items-center gap-3"><div class="w-11 h-11 rounded-2xl glass flex items-center justify-center"><i data-lucide="wallet" class="text-amber-300"></i></div><div><h1 class="text-xl font-bold">আমার হিসাব</h1><p class="text-xs text-emerald-100">প্রবাসী ফিন্যান্স ও মেস ট্র্যাকার</p></div></div>
   <button class="glass rounded-xl px-3 py-2 text-right" onclick="openModal('rateModal')"><span class="block text-[10px] text-emerald-100">১ রিয়ালের রেট</span><b class="text-amber-300" id="rateLabel">৳ ৩২.৮২</b></button>
  </div>
  <div class="mt-5 flex items-center justify-between gap-2 glass rounded-2xl p-2">
@@ -40,21 +40,34 @@
  <div class="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-slate-100"><div class="rounded-xl bg-emerald-50 p-2"><p class="text-[11px] text-emerald-700">প্রাপ্ত আয়</p><b id="sumIncome" class="text-sm text-emerald-900 money">০</b></div><div class="rounded-xl bg-rose-50 p-2"><p class="text-[11px] text-rose-700">খরচ</p><b id="sumExpense" class="text-sm text-rose-800 money">০</b></div><div class="rounded-xl bg-blue-50 p-2"><p class="text-[11px] text-blue-700">দেশে পাঠানো</p><b id="sumRemit" class="text-sm text-blue-800 money">০</b></div></div>
  </div></section>
 <section id="home" class="page active">
- <div class="panel p-4 mb-4"><div class="flex justify-between items-center mb-3"><h2 class="font-bold">দ্রুত হিসাব যোগ করুন</h2><span class="pill">এক ট্যাপে</span></div><div class="grid grid-cols-4 gap-2"><button class="soft rounded-xl p-3 text-xs font-bold" onclick="openEntry('income')"><i data-lucide="banknote" class="mx-auto mb-1"></i>বেতন</button><button class="danger rounded-xl p-3 text-xs font-bold" onclick="openEntry('expense')"><i data-lucide="shopping-bag" class="mx-auto mb-1"></i>খরচ</button><button class="rounded-xl bg-blue-50 text-blue-800 p-3 text-xs font-bold" onclick="openRemit()"><i data-lucide="send" class="mx-auto mb-1"></i>রেমিট্যান্স</button><button class="rounded-xl bg-amber-50 text-amber-800 p-3 text-xs font-bold" onclick="openLoan()"><i data-lucide="handshake" class="mx-auto mb-1"></i>ধার-দেনা</button></div></div>
+ <div class="panel p-4 mb-4"><div class="flex justify-between items-center mb-3"><h2 class="font-bold">দ্রুত হিসাব যোগ করুন</h2><span class="pill">এক ট্যাপে</span></div><div class="grid grid-cols-4 gap-2"><button class="soft rounded-xl p-3 text-xs font-bold" onclick="openEntry('income')"><i data-lucide="banknote" class="mx-auto mb-1"></i>বেতন</button><button class="danger rounded-xl p-3 text-xs font-bold" onclick="openEntry('expense')"><i data-lucide="shopping-bag" class="mx-auto mb-1"></i>খরচ</button><button class="rounded-xl bg-blue-50 text-blue-800 p-3 text-xs font-bold" onclick="openRemit()"><i data-lucide="send" class="mx-auto mb-1"></i>রেমিট্যান্স</button><button class="rounded-xl bg-amber-50 text-amber-800 p-3 text-xs font-bold" onclick="openMess()"><i data-lucide="shopping-cart" class="mx-auto mb-1"></i>মেস বাজার</button></div></div>
  <div class="panel p-4 mb-4"><h2 class="font-bold mb-3">রেমিট্যান্স বনাম খরচ</h2><div class="bar flex"><span id="remitBar" style="width:66%;background:#3b82f6"></span><span id="expenseBar" style="width:17%;background:#f43f5e"></span><span id="saveBar" style="width:17%;background:#10b981"></span></div><div class="grid grid-cols-3 gap-2 mt-3 text-xs"><span>🔵 দেশে <b id="remitPct">৬৬%</b></span><span>🔴 খরচ <b id="expensePct">১৭%</b></span><span>🟢 বাকি <b id="savePct">১৭%</b></span></div></div>
  <div class="flex items-center justify-between mb-2"><h2 class="font-bold">সাম্প্রতিক লেনদেন</h2><button class="text-emerald-700 text-xs font-bold" onclick="tab('transactions')">সব দেখুন →</button></div><div id="recent" class="space-y-2"></div>
 </section>
 <section id="transactions" class="page"><div class="flex items-center justify-between mb-3"><h2 class="text-lg font-bold">আয়-ব্যয়ের খাতা</h2><button class="btn primary" onclick="openEntry('income')">+ যোগ</button></div><div class="flex gap-2 mb-3"><button class="pill" onclick="filterTx('all')">সব</button><button class="pill" onclick="filterTx('income')">আয়</button><button class="pill" onclick="filterTx('expense')">খরচ</button></div><div id="txList" class="space-y-2"></div></section>
 <section id="remittance" class="page"><div class="panel p-5 mb-4 bg-blue-800 text-white"><p class="text-sm text-blue-100">মোট দেশে পাঠানো</p><div id="remitTotal" class="text-2xl font-bold text-amber-300">৳ ০</div><p id="remitSarTotal" class="text-xs mt-1">০ SAR</p><button class="btn gold mt-4" onclick="openRemit()">+ টাকা পাঠানোর হিসাব</button></div><div id="remitList" class="space-y-2"></div></section>
 <section id="loans" class="page"><div class="grid grid-cols-2 gap-3 mb-4"><div class="panel p-4"><p class="text-xs text-rose-600">আমি দেবো</p><b id="payable" class="text-xl text-rose-700">৳ ০</b></div><div class="panel p-4"><p class="text-xs text-emerald-600">আমি পাবো</p><b id="receivable" class="text-xl text-emerald-700">৳ ০</b></div></div><button class="btn gold mb-3" onclick="openLoan()">+ ধার/দেনা যোগ করুন</button><div id="loanList" class="space-y-2"></div></section>
+<section id="mess" class="page">
+ <div class="panel p-5 mb-4 bg-emerald-800 text-white">
+  <div class="flex justify-between items-start">
+   <div><p class="text-sm text-emerald-200">মেসের মোট বাজার খরচ</p><div id="messTotal" class="text-2xl font-bold text-amber-300">০ SAR</div></div>
+   <div class="text-right"><span class="text-xs text-emerald-200">মেস সদস্য সংখ্যা</span><input type="number" id="messMembers" class="w-16 p-1 rounded bg-emerald-900 text-white text-center text-sm font-bold border border-emerald-600 outline-none" value="11" onchange="updateMessMembers(this.value)"></div>
+  </div>
+  <div class="mt-4 pt-3 border-t border-emerald-700/60 flex justify-between text-xs"><span>জনপ্রতি বাজার খরচ:</span><b id="perMemberCost" class="text-amber-300 text-sm">০ SAR</b></div>
+  <button class="btn gold w-full mt-4" onclick="openMess()">+ নতুন বাজার যোগ করুন</button>
+ </div>
+ <div class="flex items-center justify-between mb-3"><h2 class="font-bold">বাজারের তালিকা</h2><span id="messCount" class="text-xs text-slate-500">০ টি এন্ট্রি</span></div>
+ <div id="messList" class="space-y-2"></div>
+</section>
 <section id="reports" class="page"><div class="panel p-5 mb-4"><h2 class="font-bold mb-3">হিসাবের সারাংশ</h2><div id="reportStats" class="space-y-3"></div></div><div class="panel p-4 mb-4"><h2 class="font-bold mb-2">ডেটা ব্যাকআপ</h2><p class="text-xs text-slate-500 mb-3">ফোনে JSON ব্যাকআপ ডাউনলোড করুন বা আগে নেওয়া ব্যাকআপ ফিরিয়ে আনুন। ক্লাউড ব্যাকআপের জন্য Firebase সেটআপ প্রয়োজন।</p><div class="grid grid-cols-2 gap-2"><button class="btn soft" onclick="exportData()">JSON ডাউনলোড</button><button class="btn soft" onclick="document.getElementById('importFile').click()">ব্যাকআপ ফিরিয়ে আনুন</button></div><input type="file" id="importFile" accept=".json,application/json" class="hidden" onchange="importData(event)"><button class="btn primary w-full mt-3" onclick="copyReport()">রিপোর্ট কপি</button></div>
 <div class="panel p-4"><h2 class="font-bold mb-2">অনলাইন ব্যাকআপ</h2><p class="text-xs text-slate-500 mb-3">Firebase Firestore ক্লাউড কানেক্টেড আছে। ডেটা স্বয়ংক্রিয়ভাবে ক্লাউডে ব্যাকআপ থাকে।</p><div id="cloudStatus" class="text-xs mb-3 text-emerald-600 font-bold">● ক্লাউড সিঙ্ক চালু আছে</div><div class="grid grid-cols-2 gap-2"><button class="btn soft" onclick="cloudRestore()">ক্লাউড থেকে আনুন</button><button class="btn primary" onclick="cloudSync()">এখনই ব্যাকআপ</button></div><button class="btn danger w-full mt-2" onclick="toggleDark()">ডার্ক মোড চালু/বন্ধ</button></div></section>
 </main>
-<nav class="nav"><button class="active" data-tab="home" onclick="tab('home')"><i data-lucide="house"></i>হোম</button><button data-tab="transactions" onclick="tab('transactions')"><i data-lucide="book-open"></i>আয়-ব্যয়</button><button data-tab="remittance" onclick="tab('remittance')"><i data-lucide="send"></i>দেশে টাকা</button><button data-tab="loans" onclick="tab('loans')"><i data-lucide="handshake"></i>ধার-দেনা</button><button data-tab="reports" onclick="tab('reports')"><i data-lucide="chart-no-axes-column"></i>রিপোর্ট</button></nav>
+<nav class="nav"><button class="active" data-tab="home" onclick="tab('home')"><i data-lucide="house"></i>হোম</button><button data-tab="transactions" onclick="tab('transactions')"><i data-lucide="book-open"></i>আয়-ব্যয়</button><button data-tab="remittance" onclick="tab('remittance')"><i data-lucide="send"></i>দেশে টাকা</button><button data-tab="loans" onclick="tab('loans')"><i data-lucide="handshake"></i>ধার-দেনা</button><button data-tab="mess" onclick="tab('mess')"><i data-lucide="shopping-cart"></i>মেস বাজার</button><button data-tab="reports" onclick="tab('reports')"><i data-lucide="chart-no-axes-column"></i>রিপোর্ট</button></nav>
 </div>
 <div id="entryModal" class="modal"><div class="sheet"><div class="flex justify-between items-center mb-4"><h2 id="entryTitle" class="text-lg font-bold">লেনদেন যোগ করুন</h2><button onclick="closeModal('entryModal')"><i data-lucide="x"></i></button></div><form id="entryForm" class="space-y-3"><input type="hidden" id="entryType"><div><label>বিবরণ</label><input class="field" id="entryNote" required placeholder="যেমন: মাসিক বেতন"></div><div class="grid grid-cols-2 gap-3"><div><label>পরিমাণ</label><input class="field" type="number" min=".01" step=".01" id="entryAmount" required></div><div><label>মুদ্রা</label><select class="field" id="entryCurrency"><option>SAR</option><option>BDT</option></select></div></div><div><label>ক্যাটাগরি</label><select class="field" id="entryCategory"><option>প্রাপ্ত বেতন</option><option>ওভারটাইম</option><option>খাওয়া ও হাতখরচ</option><option>আকামা</option><option>রুম ভাড়া/বিদ্যুৎ</option><option>মোবাইল/ইন্টারনেট</option><option>অন্যান্য</option></select></div><div><label>তারিখ</label><input class="field" type="date" id="entryDate" required></div><button class="btn primary w-full">হিসাব সেভ করুন</button></form></div></div>
 <div id="remitModal" class="modal"><div class="sheet"><div class="flex justify-between mb-4"><h2 class="text-lg font-bold">রেমিট্যান্স যোগ করুন</h2><button onclick="closeModal('remitModal')"><i data-lucide="x"></i></button></div><form id="remitForm" class="space-y-3"><div><label>প্রাপক / কারণ</label><input class="field" id="rRecipient" required></div><div class="grid grid-cols-2 gap-3"><div><label>রিয়াল (SAR)</label><input class="field" id="rSar" type="number" min=".01" step=".01" required></div><div><label>রেট</label><input class="field" id="rRate" type="number" min=".01" step=".01" required></div></div><div class="grid grid-cols-2 gap-3"><div><label>ফি (SAR)</label><input class="field" id="rFee" type="number" min="0" step=".01" value="0"></div><div><label>তারিখ</label><input class="field" id="rDate" type="date" required></div></div><label class="flex items-center gap-2"><input id="rBonus" type="checkbox"> ২.৫% বোনাস অন্তর্ভুক্ত</label><div id="rPreview" class="rounded-xl bg-blue-50 text-blue-800 p-3 text-sm">দেশে পাবে: ৳ ০</div><button class="btn primary w-full">রেমিট্যান্স সেভ করুন</button></form></div></div>
 <div id="loanModal" class="modal"><div class="sheet"><div class="flex justify-between mb-4"><h2 class="text-lg font-bold">ধার/দেনা যোগ করুন</h2><button onclick="closeModal('loanModal')"><i data-lucide="x"></i></button></div><form id="loanForm" class="space-y-3"><div><label>ব্যক্তির নাম</label><input class="field" id="lPerson" required></div><div><label>ধরন</label><select class="field" id="lType"><option value="taken">আমি দেবো (দেনা)</option><option value="given">আমি পাবো (পাওনা)</option></select></div><div class="grid grid-cols-2 gap-3"><div><label>পরিমাণ (BDT)</label><input class="field" id="lAmount" type="number" min=".01" required></div><div><label>তারিখ</label><input class="field" id="lDate" type="date" required></div></div><div><label>নোট</label><input class="field" id="lNote"></div><button class="btn primary w-full">সেভ করুন</button></form></div></div>
+<div id="messModal" class="modal"><div class="sheet"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-bold">মেসের বাজার খরচ যোগ</h2><button onclick="closeModal('messModal')"><i data-lucide="x"></i></button></div><form id="messForm" class="space-y-3"><div><label>বাজারকারী (কে বাজার করেছে?)</label><input class="field" id="mShopper" required placeholder="যেমন: তামিম, রফিক"></div><div><label>আইটেম/বিবরণ</label><input class="field" id="mItems" required placeholder="যেমন: চাল, তেল, পেঁয়াজ, মুরগি"></div><div class="grid grid-cols-2 gap-3"><div><label>টাকার পরিমাণ</label><input class="field" type="number" min=".01" step=".01" id="mAmount" required></div><div><label>কারেন্সি</label><select class="field" id="mCurrency"><option>SAR</option><option>BDT</option></select></div></div><div><label>তারিখ</label><input class="field" type="date" id="mDate" required></div><button class="btn primary w-full">বাজার সেভ করুন</button></form></div></div>
 <div id="rateModal" class="modal"><div class="sheet"><div class="flex justify-between mb-4"><h2 class="font-bold">রিয়াল রেট পরিবর্তন</h2><button onclick="closeModal('rateModal')"><i data-lucide="x"></i></button></div><label>১ SAR = কত BDT?</label><input class="field mb-4" id="newRate" type="number" min=".01" step=".01"><button class="btn primary w-full" onclick="saveRate()">রেট সেভ করুন</button></div></div>
 <div id="toast" class="toast"></div>
 
@@ -79,7 +92,6 @@
   window.firebaseSync = async function(data) {
     try {
       await setDoc(doc(db, "hisab_data", "current"), data);
-      console.log("Firebase sync successful");
     } catch (e) {
       console.error("Firebase sync error:", e);
     }
@@ -101,6 +113,8 @@
       const docSnap = await getDoc(doc(db, "hisab_data", "current"));
       if (docSnap.exists()) {
         state = docSnap.data();
+        if(!state.mess) state.mess = [];
+        if(!state.messMembers) state.messMembers = 11;
         localStorage.setItem(KEY, JSON.stringify(state));
         render();
         toast("ক্লাউড থেকে সফলভাবে ডেটা লোড হয়েছে!");
@@ -115,7 +129,7 @@
 
 <script>
 const KEY='amar_hisab_upgrade_v3';
-const DEFAULT={version:3,rate:32.82,currency:'SAR',transactions:[
+const DEFAULT={version:3,rate:32.82,currency:'SAR',messMembers:11,mess:[],transactions:[
 {id:'sal_7',type:'income',category:'প্রাপ্ত বেতন',amountSAR:1700,amountBDT:56270,date:'2026-09-22',note:'বেতন ২২ সেপ্টেম্বর'},
 {id:'sal_6',type:'income',category:'প্রাপ্ত বেতন',amountSAR:1700,amountBDT:55794,date:'2026-08-07',note:'বেতন ০৭ আগস্ট'},
 {id:'sal_5',type:'income',category:'প্রাপ্ত বেতন',amountSAR:1700,amountBDT:56250,date:'2026-07-13',note:'বেতন ১৩ জুলাই'},
@@ -137,12 +151,22 @@ remittances:[
 loans:[
 ['শহিদ ঘরামি',130000],['জলিল হাওলাদার',75000],['সেজো খালা',73000],['আজিমপুর',65000],['মাসুদ ভাই',50000],['হারুন মোল্লা',50000],['ফাতেমা',0],['দাদি',0]
 ].map((x,i)=>({id:'ln_'+(i+1),person:x[0],type:'taken',amountBDT:x[1],paidBDT:0,date:'2026-05-01',note:''}))};
+
 let state=load();
-function load(){try{let x=JSON.parse(localStorage.getItem(KEY));if(x&&x.version===3)return x}catch(e){}return structuredClone(DEFAULT)}
+function load(){
+  try{
+    let x=JSON.parse(localStorage.getItem(KEY));
+    if(x&&x.version===3){
+      if(!x.mess) x.mess = [];
+      if(!x.messMembers) x.messMembers = 11;
+      return x;
+    }
+  }catch(e){}
+  return structuredClone(DEFAULT);
+}
 function save(){localStorage.setItem(KEY,JSON.stringify(state));render();if(window.firebaseSync)window.firebaseSync(state)}
 function bn(n,d=0){return (Number(n)||0).toLocaleString('bn-BD',{minimumFractionDigits:d,maximumFractionDigits:d})}
 function money(sar,bdt){return state.currency==='SAR'?bn(sar,2)+' SAR':'৳ '+bn(bdt??sar*state.rate)}
-function bdtOf(t){return Number(t.amountBDT??t.amountSAR*state.rate)}
 function dateNow(){return new Date().toLocaleDateString('en-CA')}
 function toast(s){let t=document.getElementById('toast');t.textContent=s;t.style.display='block';setTimeout(()=>t.style.display='none',2400)}
 function selected(a){let m=document.getElementById('month').value;return m==='ALL'||a.date?.startsWith(m)}
@@ -154,16 +178,59 @@ function openEntry(type){document.getElementById('entryType').value=type;documen
 function openRemit(){document.getElementById('remitForm').reset();document.getElementById('rRate').value=state.rate;document.getElementById('rDate').value=dateNow();openModal('remitModal');calcRemit()}
 function calcRemit(){let sar=+document.getElementById('rSar').value||0,rate=+document.getElementById('rRate').value||0;let b=sar*rate*(document.getElementById('rBonus').checked?1.025:1);document.getElementById('rPreview').textContent='দেশে পাবে: ৳ '+bn(b)+' • মোট খরচ: '+bn(sar+(+document.getElementById('rFee').value||0),2)+' SAR'}
 function openLoan(){document.getElementById('loanForm').reset();document.getElementById('lDate').value=dateNow();openModal('loanModal')}
+function openMess(){document.getElementById('messForm').reset();document.getElementById('mDate').value=dateNow();openModal('messModal')}
+function updateMessMembers(val){state.messMembers=Math.max(1,+val||1);save();toast('সদস্য সংখ্যা আপডেট হয়েছে')}
+
 document.getElementById('entryForm').onsubmit=e=>{e.preventDefault();let amount=+entryAmount.value,cur=entryCurrency.value;state.transactions.unshift({id:'tx_'+Date.now(),type:entryType.value,category:entryCategory.value,amountSAR:cur==='SAR'?amount:amount/state.rate,amountBDT:cur==='BDT'?amount:Math.round(amount*state.rate),date:entryDate.value,note:entryNote.value});closeModal('entryModal');save();toast('হিসাব সেভ হয়েছে')};
 document.getElementById('remitForm').onsubmit=e=>{e.preventDefault();let sar=+rSar.value,rate=+rRate.value,fee=+rFee.value||0,bonus=rBonus.checked;state.remittances.unshift({id:'r_'+Date.now(),recipient:rRecipient.value,amountSAR:sar,feeSAR:fee,rate,amountBDT:Math.round(sar*rate*(bonus?1.025:1)),date:rDate.value,bonus});closeModal('remitModal');save();toast('রেমিট্যান্স সেভ হয়েছে')};
 document.getElementById('loanForm').onsubmit=e=>{e.preventDefault();state.loans.unshift({id:'l_'+Date.now(),person:lPerson.value,type:lType.value,amountBDT:+lAmount.value,paidBDT:0,date:lDate.value,note:lNote.value});closeModal('loanModal');save();toast('ধার-দেনা যোগ হয়েছে')};
+document.getElementById('messForm').onsubmit=e=>{e.preventDefault();let amount=+mAmount.value,cur=mCurrency.value;if(!state.mess)state.mess=[];state.mess.unshift({id:'m_'+Date.now(),shopper:mShopper.value,items:mItems.value,amountSAR:cur==='SAR'?amount:amount/state.rate,amountBDT:cur==='BDT'?amount:Math.round(amount*state.rate),date:mDate.value});closeModal('messModal');save();toast('মেসের বাজার যোগ হয়েছে')};
 ['rSar','rRate','rFee','rBonus'].forEach(id=>document.getElementById(id).addEventListener('input',calcRemit));
-function render(){document.getElementById('rateLabel').textContent='৳ '+bn(state.rate,2);let tx=state.transactions.filter(selected),rem=state.remittances.filter(selected);let inc=tx.filter(x=>x.type==='income'),exp=tx.filter(x=>x.type==='expense');let sum=(arr,k)=>arr.reduce((s,x)=>s+Number(x[k]||0),0);let iS=sum(inc,'amountSAR'),iB=sum(inc,'amountBDT'),eS=sum(exp,'amountSAR'),eB=sum(exp,'amountBDT'),rS=rem.reduce((s,x)=>s+x.amountSAR+(x.feeSAR||0),0),rB=sum(rem,'amountBDT'),aS=sum(exp.filter(x=>x.category==='দেশ থেকে আকামার জন্য আনা'),'amountSAR'),aB=sum(exp.filter(x=>x.category==='দেশ থেকে আকামার জন্য আনা'),'amountBDT');
-document.getElementById('netBalance').textContent=money(rS-aS,rB-aB);document.getElementById('netSub').textContent=state.currency==='SAR'?'≈ ৳ '+bn(rB-aB):'≈ '+bn(rS-aS,2)+' SAR';document.getElementById('sumIncome').textContent=money(iS,iB);document.getElementById('sumExpense').textContent=money(eS,eB);document.getElementById('sumRemit').textContent=money(rS,rB);
-let combined=[...tx].sort((a,b)=>b.date.localeCompare(a.date));document.getElementById('recent').innerHTML=combined.slice(0,5).map(t=>txCard(t,false)).join('')||empty('এই সময়ের কোনো লেনদেন নেই');document.getElementById('txList').innerHTML=combined.map(t=>txCard(t,true)).join('')||empty('কোনো লেনদেন নেই');
-document.getElementById('remitTotal').textContent='৳ '+bn(rB);document.getElementById('remitSarTotal').textContent=bn(rS,2)+' SAR পাঠানো';document.getElementById('remitList').innerHTML=[...rem].sort((a,b)=>b.date.localeCompare(a.date)).map(r=>`<div class="panel p-4 flex justify-between gap-2"><div><b>${esc(r.recipient)}</b><p class="text-xs text-slate-500">${r.date} • রেট ${bn(r.rate,2)}</p><p class="text-xs text-slate-500">${bn(r.amountSAR,2)} SAR</p></div><div class="text-right"><b class="text-blue-700">৳ ${bn(r.amountBDT)}</b><button class="block text-xs text-rose-600 ml-auto mt-2" onclick="del('remittances','${r.id}')">মুছুন</button></div></div>`).join('')||empty('কোনো রেমিট্যান্স নেই');
-let payable=state.loans.filter(x=>x.type==='taken').reduce((s,x)=>s+Math.max(0,x.amountBDT-(x.paidBDT||0)),0),recv=state.loans.filter(x=>x.type==='given').reduce((s,x)=>s+Math.max(0,x.amountBDT-(x.paidBDT||0)),0);document.getElementById('payable').textContent='৳ '+bn(payable);document.getElementById('receivable').textContent='৳ '+bn(recv);document.getElementById('loanList').innerHTML=state.loans.map(l=>`<div class="panel p-4"><div class="flex justify-between gap-2"><div><span class="pill">${l.type==='taken'?'আমি দেবো':'আমি পাবো'}</span><h3 class="font-bold mt-2">${esc(l.person)}</h3><p class="text-xs text-slate-500">${l.date} ${esc(l.note||'')}</p></div><div class="text-right"><b class="${l.type==='taken'?'text-rose-600':'text-emerald-600'}">৳ ${bn(Math.max(0,l.amountBDT-(l.paidBDT||0)))}</b><button class="block text-xs text-rose-600 ml-auto mt-2" onclick="del('loans','${l.id}')">মুছুন</button></div></div>${l.amountBDT>(l.paidBDT||0)?`<button class="btn soft mt-3" onclick="payLoan('${l.id}')">কিস্তি জমা</button>`:'<p class="text-xs text-emerald-600 mt-2">পরিশোধিত</p>'}</div>`).join('')||empty('কোনো ধার-দেনা নেই');
-let total=Math.max(1,iS),rp=Math.min(100,Math.round(rS/total*100)),ep=Math.min(100-rp,Math.round(Math.max(0,eS-aS)/total*100)),sp=100-rp-ep;[['remit',rp],['expense',ep],['save',sp]].forEach(([id,p])=>{document.getElementById(id+'Bar').style.width=p+'%';document.getElementById(id+'Pct').textContent=bn(p)+'%'});document.getElementById('reportStats').innerHTML=[['প্রাপ্ত আয়',iS,iB],['মোট খরচ',eS,eB],['মোট রেমিট্যান্স',rS,rB],['নিট রেমিট্যান্স',rS-aS,rB-aB],['দেনা বাকি',payable,null],['পাওনা বাকি',recv,null]].map(([name,s,b])=>`<div class="flex justify-between gap-3 text-sm"><span class="text-slate-500">${name}</span><b>${b===null?'৳ '+bn(s*state.rate):money(s,b)}</b></div>`).join('');lucide.createIcons()}
+
+function render(){
+  document.getElementById('rateLabel').textContent='৳ '+bn(state.rate,2);
+  let tx=state.transactions.filter(selected),rem=state.remittances.filter(selected);
+  let inc=tx.filter(x=>x.type==='income'),exp=tx.filter(x=>x.type==='expense');
+  let sum=(arr,k)=>arr.reduce((s,x)=>s+Number(x[k]||0),0);
+  let iS=sum(inc,'amountSAR'),iB=sum(inc,'amountBDT'),eS=sum(exp,'amountSAR'),eB=sum(exp,'amountBDT');
+  let rS=rem.reduce((s,x)=>s+x.amountSAR+(x.feeSAR||0),0),rB=sum(rem,'amountBDT');
+  let aS=sum(exp.filter(x=>x.category==='দেশ থেকে আকামার জন্য আনা'),'amountSAR'),aB=sum(exp.filter(x=>x.category==='দেশ থেকে আকামার জন্য আনা'),'amountBDT');
+  
+  document.getElementById('netBalance').textContent=money(rS-aS,rB-aB);
+  document.getElementById('netSub').textContent=state.currency==='SAR'?'≈ ৳ '+bn(rB-aB):'≈ '+bn(rS-aS,2)+' SAR';
+  document.getElementById('sumIncome').textContent=money(iS,iB);
+  document.getElementById('sumExpense').textContent=money(eS,eB);
+  document.getElementById('sumRemit').textContent=money(rS,rB);
+  
+  let combined=[...tx].sort((a,b)=>b.date.localeCompare(a.date));
+  document.getElementById('recent').innerHTML=combined.slice(0,5).map(t=>txCard(t,false)).join('')||empty('এই সময়ের কোনো লেনদেন নেই');
+  document.getElementById('txList').innerHTML=combined.map(t=>txCard(t,true)).join('')||empty('কোনো লেনদেন নেই');
+  
+  document.getElementById('remitTotal').textContent='৳ '+bn(rB);
+  document.getElementById('remitSarTotal').textContent=bn(rS,2)+' SAR পাঠানো';
+  document.getElementById('remitList').innerHTML=[...rem].sort((a,b)=>b.date.localeCompare(a.date)).map(r=>`<div class="panel p-4 flex justify-between gap-2"><div><b>${esc(r.recipient)}</b><p class="text-xs text-slate-500">${r.date} • রেট ${bn(r.rate,2)}</p><p class="text-xs text-slate-500">${bn(r.amountSAR,2)} SAR</p></div><div class="text-right"><b class="text-blue-700">৳ ${bn(r.amountBDT)}</b><button class="block text-xs text-rose-600 ml-auto mt-2" onclick="del('remittances','${r.id}')">মুছুন</button></div></div>`).join('')||empty('কোনো রেমিট্যান্স নেই');
+  
+  let payable=state.loans.filter(x=>x.type==='taken').reduce((s,x)=>s+Math.max(0,x.amountBDT-(x.paidBDT||0)),0);
+  let recv=state.loans.filter(x=>x.type==='given').reduce((s,x)=>s+Math.max(0,x.amountBDT-(x.paidBDT||0)),0);
+  document.getElementById('payable').textContent='৳ '+bn(payable);
+  document.getElementById('receivable').textContent='৳ '+bn(recv);
+  document.getElementById('loanList').innerHTML=state.loans.map(l=>`<div class="panel p-4"><div class="flex justify-between gap-2"><div><span class="pill">${l.type==='taken'?'আমি দেবো':'আমি পাবো'}</span><h3 class="font-bold mt-2">${esc(l.person)}</h3><p class="text-xs text-slate-500">${l.date} ${esc(l.note||'')}</p></div><div class="text-right"><b class="${l.type==='taken'?'text-rose-600':'text-emerald-600'}">৳ ${bn(Math.max(0,l.amountBDT-(l.paidBDT||0)))}</b><button class="block text-xs text-rose-600 ml-auto mt-2" onclick="del('loans','${l.id}')">মুছুন</button></div></div>${l.amountBDT>(l.paidBDT||0)?`<button class="btn soft mt-3" onclick="payLoan('${l.id}')">কিস্তি জমা</button>`:'<p class="text-xs text-emerald-600 mt-2">পরিশোধিত</p>'}</div>`).join('')||empty('কোনো ধার-দেনা নেই');
+
+  // মেস বাজার হিসাব
+  let messArr=(state.mess||[]).filter(selected);
+  let mS=sum(messArr,'amountSAR'), mB=sum(messArr,'amountBDT');
+  let members=state.messMembers||11;
+  document.getElementById('messMembers').value=members;
+  document.getElementById('messTotal').textContent=money(mS,mB);
+  document.getElementById('perMemberCost').textContent=money(mS/members,mB/members);
+  document.getElementById('messCount').textContent=bn(messArr.length)+' টি বাজার';
+  document.getElementById('messList').innerHTML=[...messArr].sort((a,b)=>b.date.localeCompare(a.date)).map(m=>`<div class="panel p-4 flex justify-between gap-2"><div><span class="pill font-bold text-emerald-700 bg-emerald-50">${esc(m.shopper)}</span><p class="font-bold mt-1 text-sm">${esc(m.items)}</p><p class="text-xs text-slate-500 mt-0.5">${m.date}</p></div><div class="text-right"><b class="text-emerald-800 text-sm">${money(m.amountSAR,m.amountBDT)}</b><button class="block text-xs text-rose-600 ml-auto mt-2" onclick="del('mess','${m.id}')">মুছুন</button></div></div>`).join('')||empty('মেসের কোনো বাজার খরচ যোগ করা হয়নি');
+
+  let total=Math.max(1,iS),rp=Math.min(100,Math.round(rS/total*100)),ep=Math.min(100-rp,Math.round(Math.max(0,eS-aS)/total*100)),sp=100-rp-ep;
+  [['remit',rp],['expense',ep],['save',sp]].forEach(([id,p])=>{document.getElementById(id+'Bar').style.width=p+'%';document.getElementById(id+'Pct').textContent=bn(p)+'%'});
+  document.getElementById('reportStats').innerHTML=[['প্রাপ্ত আয়',iS,iB],['মোট খরচ',eS,eB],['মোট রেমিট্যান্স',rS,rB],['নিট রেমিট্যান্স',rS-aS,rB-aB],['দেনা বাকি',payable,null],['পাওনা বাকি',recv,null],['মেস বাজার মোট',mS,mB]].map(([name,s,b])=>`<div class="flex justify-between gap-3 text-sm"><span class="text-slate-500">${name}</span><b>${b===null?'৳ '+bn(s*state.rate):money(s,b)}</b></div>`).join('');
+  lucide.createIcons();
+}
 function txCard(t,delBtn){let inc=t.type==='income';return `<div class="panel p-3 flex items-center justify-between gap-2"><div class="flex gap-3 items-center min-w-0"><div class="w-10 h-10 rounded-xl flex items-center justify-center ${inc?'bg-emerald-50 text-emerald-700':'bg-rose-50 text-rose-600'}"><i data-lucide="${inc?'arrow-down-left':'arrow-up-right'}"></i></div><div class="min-w-0"><b class="block text-sm truncate">${esc(t.category||t.note)}</b><p class="text-[11px] text-slate-500 truncate">${esc(t.note||'')} • ${t.date}</p></div></div><div class="text-right shrink-0"><b class="text-sm ${inc?'text-emerald-700':'text-rose-600'}">${inc?'+':'−'} ${money(t.amountSAR,t.amountBDT)}</b>${delBtn?`<button class="block text-[11px] text-rose-500 ml-auto mt-1" onclick="del('transactions','${t.id}')">মুছুন</button>`:''}</div></div>`}
 function empty(s){return `<div class="panel p-6 text-center text-sm text-slate-400">${s}</div>`}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -172,7 +239,7 @@ function payLoan(id){let l=state.loans.find(x=>x.id===id);let rem=l.amountBDT-(l
 function saveRate(){let n=+document.getElementById('newRate').value;if(n>0){state.rate=n;save();closeModal('rateModal');toast('রেট আপডেট হয়েছে')}}
 function exportData(){let blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='amar-hisab-backup-'+dateNow()+'.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x||!Array.isArray(x.transactions)||!Array.isArray(x.remittances)||!Array.isArray(x.loans))throw Error();if(confirm('বর্তমান হিসাবের জায়গায় ব্যাকআপের ডেটা বসাবেন? আগে বর্তমান ডেটা ডাউনলোড করে রাখুন।')){state={...x,version:3};save();toast('ব্যাকআপ ফিরিয়ে আনা হয়েছে')}}catch(err){alert('এই JSON ফাইলটি বৈধ Amar Hisab ব্যাকআপ নয়')}};r.readAsText(f);e.target.value=''}
-function copyReport(){let s=`আমার হিসাব\nমোট আয়: ${document.getElementById('sumIncome').textContent}\nমোট খরচ: ${document.getElementById('sumExpense').textContent}\nমোট রেমিট্যান্স: ${document.getElementById('sumRemit').textContent}\nদেনা: ${document.getElementById('payable').textContent}\nপাওনা: ${document.getElementById('receivable').textContent}`;navigator.clipboard?.writeText(s).then(()=>toast('রিপোর্ট কপি হয়েছে')).catch(()=>prompt('রিপোর্ট কপি করুন',s))}
+function copyReport(){let s=`আমার হিসাব\nমোট আয়: ${document.getElementById('sumIncome').textContent}\nমোট খরচ: ${document.getElementById('sumExpense').textContent}\nমোট রেমিট্যান্স: ${document.getElementById('sumRemit').textContent}\nমেস বাজার: ${document.getElementById('messTotal').textContent}\nদেনা: ${document.getElementById('payable').textContent}\nপাওনা: ${document.getElementById('receivable').textContent}`;navigator.clipboard?.writeText(s).then(()=>toast('রিপোর্ট কপি হয়েছে')).catch(()=>prompt('রিপোর্ট কপি করুন',s))}
 function toggleDark(){document.documentElement.classList.toggle('dark');localStorage.setItem('amar-dark',document.documentElement.classList.contains('dark')?'1':'0')}
 function filterTx(f){let all=state.transactions.filter(selected);if(f!=='all')all=all.filter(t=>t.type===f);document.getElementById('txList').innerHTML=all.sort((a,b)=>b.date.localeCompare(a.date)).map(t=>txCard(t,true)).join('')||empty('কোনো লেনদেন নেই');lucide.createIcons()}
 
@@ -181,4 +248,3 @@ render();
 </script>
 </body>
 </html>
-```[span_2](start_span)[span_2](end_span)
