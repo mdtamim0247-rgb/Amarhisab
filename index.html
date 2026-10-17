@@ -35,7 +35,7 @@
  </div>
 </header>
 <main class="-mt-9 relative z-10">
-<!-- পার্সোনাল সারাংশ কার্ড: মেস ট্যাবে গেলে এটি হাইড থাকবে -->
+<!-- পার্সোনাল সারাংশ কার্ড -->
 <section id="personalSummary" class="px-4 mb-5"><div class="panel p-5">
  <div class="flex justify-between gap-2"><div><p class="text-xs text-slate-500">নিট রেমিট্যান্স (গ্রস − দেশে থেকে আনা)</p><div id="netBalance" class="text-3xl font-bold money mt-1">৳ ৬৪,৭৫০</div><p id="netSub" class="text-xs text-emerald-700 mt-1">≈ ১,৯৫৯ SAR</p></div><button class="btn gold h-fit" onclick="openEntry('income')"><i data-lucide="plus" class="inline w-4 h-4"></i> এন্ট্রি</button></div>
  <div class="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-slate-100"><div class="rounded-xl bg-emerald-50 p-2"><p class="text-[11px] text-emerald-700">প্রাপ্ত আয়</p><b id="sumIncome" class="text-sm text-emerald-900 money">০</b></div><div class="rounded-xl bg-rose-50 p-2"><p class="text-[11px] text-rose-700">খরচ</p><b id="sumExpense" class="text-sm text-rose-800 money">০</b></div><div class="rounded-xl bg-blue-50 p-2"><p class="text-[11px] text-blue-700">দেশে পাঠানো</p><b id="sumRemit" class="text-sm text-blue-800 money">০</b></div></div>
@@ -51,7 +51,7 @@
 <section id="remittance" class="page"><div class="panel p-5 mb-4 bg-blue-800 text-white"><p class="text-sm text-blue-100">মোট দেশে পাঠানো</p><div id="remitTotal" class="text-2xl font-bold text-amber-300">৳ ০</div><p id="remitSarTotal" class="text-xs mt-1">০ SAR</p><button class="btn gold mt-4" onclick="openRemit()">+ টাকা পাঠানোর হিসাব</button></div><div id="remitList" class="space-y-2"></div></section>
 <section id="loans" class="page"><div class="grid grid-cols-2 gap-3 mb-4"><div class="panel p-4"><p class="text-xs text-rose-600">আমি দেবো</p><b id="payable" class="text-xl text-rose-700">৳ ০</b></div><div class="panel p-4"><p class="text-xs text-emerald-600">আমি পাবো</p><b id="receivable" class="text-xl text-emerald-700">৳ ০</b></div></div><button class="btn gold mb-3" onclick="openLoan()">+ ধার/দেনা যোগ করুন</button><div id="loanList" class="space-y-2"></div></section>
 
-<!-- সম্পূর্ণ আলাদা মেস বাজার খাতা -->
+<!-- মেস বাজার খাতা -->
 <section id="mess" class="page">
  <div class="panel p-5 mb-4 bg-emerald-800 text-white shadow-lg">
   <div class="flex justify-between items-start">
@@ -59,14 +59,25 @@
    <div class="text-right"><span class="text-xs text-emerald-200">মেস সদস্য</span><input type="number" id="messMembers" class="w-16 p-1.5 rounded-lg bg-emerald-900 text-white text-center text-sm font-bold border border-emerald-600 outline-none block mt-1" value="11" onchange="updateMessMembers(this.value)"></div>
   </div>
   <div class="mt-4 pt-3 border-t border-emerald-700/60 flex justify-between items-center text-xs"><span>জনপ্রতি খরচ পড়বে:</span><b id="perMemberCost" class="text-amber-300 text-base font-bold">০ SAR</b></div>
-  <button class="btn gold w-full mt-4 flex items-center justify-center gap-2" onclick="openMess()"><i data-lucide="plus" class="w-4 h-4"></i> নতুন বাজার যোগ করুন</button>
+  <button class="btn gold w-full mt-4 flex items-center justify-center gap-1.5" onclick="openMess()"><i data-lucide="plus" class="w-4 h-4"></i> নতুন বাজার যোগ করুন</button>
  </div>
  <div class="flex items-center justify-between mb-3"><h2 class="font-bold text-base">বাজারের তালিকা</h2><span id="messCount" class="pill font-bold">০ টি বাজার</span></div>
  <div id="messList" class="space-y-2"></div>
 </section>
 
-<section id="reports" class="page"><div class="panel p-5 mb-4"><h2 class="font-bold mb-3">হিসাবের সারাংশ</h2><div id="reportStats" class="space-y-3"></div></div><div class="panel p-4 mb-4"><h2 class="font-bold mb-2">ডেটা ব্যাকআপ</h2><p class="text-xs text-slate-500 mb-3">ফোনে JSON ব্যাকআপ ডাউনলোড করুন বা আগে নেওয়া ব্যাকআপ ফিরিয়ে আনুন। ক্লাউড ব্যাকআপের জন্য Firebase সেটআপ প্রয়োজন।</p><div class="grid grid-cols-2 gap-2"><button class="btn soft" onclick="exportData()">JSON ডাউনলোড</button><button class="btn soft" onclick="document.getElementById('importFile').click()">ব্যাকআপ ফিরিয়ে আনুন</button></div><input type="file" id="importFile" accept=".json,application/json" class="hidden" onchange="importData(event)"><button class="btn primary w-full mt-3" onclick="copyReport()">রিপোর্ট কপি</button></div>
-<div class="panel p-4"><h2 class="font-bold mb-2">অনলাইন ব্যাকআপ</h2><p class="text-xs text-slate-500 mb-3">Firebase Firestore ক্লাউড কানেক্টেড আছে। ডেটা স্বয়ংক্রিয়ভাবে ক্লাউডে ব্যাকআপ থাকে।</p><div id="cloudStatus" class="text-xs mb-3 text-emerald-600 font-bold">● ক্লাউড সিঙ্ক চালু আছে</div><div class="grid grid-cols-2 gap-2"><button class="btn soft" onclick="cloudRestore()">ক্লাউড থেকে আনুন</button><button class="btn primary" onclick="cloudSync()">এখনই ব্যাকআপ</button></div><button class="btn danger w-full mt-2" onclick="toggleDark()">ডার্ক মোড চালু/বন্ধ</button></div></section>
+<section id="reports" class="page">
+ <div class="panel p-5 mb-4">
+   <div class="flex justify-between items-center mb-3">
+     <h2 class="font-bold">আর্থিক সারাংশ</h2>
+     <button class="btn gold !py-1.5 !px-3 text-xs flex items-center gap-1" onclick="generateAllPagesPDF()">
+       <i data-lucide="file-down" class="w-4 h-4"></i> সব হিসাবের PDF ডাউনলোড
+     </button>
+   </div>
+   <div id="reportStats" class="space-y-3"></div>
+ </div>
+ <div class="panel p-4 mb-4"><h2 class="font-bold mb-2">ডেটা ব্যাকআপ</h2><p class="text-xs text-slate-500 mb-3">ফোনে JSON ব্যাকআপ ডাউনলোড করুন বা আগে নেওয়া ব্যাকআপ ফিরিয়ে আনুন। ক্লাউড ব্যাকআপের জন্য Firebase সেটআপ রয়েছে।</p><div class="grid grid-cols-2 gap-2"><button class="btn soft" onclick="exportData()">JSON ডাউনলোড</button><button class="btn soft" onclick="document.getElementById('importFile').click()">ব্যাকআপ ফিরিয়ে আনুন</button></div><input type="file" id="importFile" accept=".json,application/json" class="hidden" onchange="importData(event)"><button class="btn primary w-full mt-3" onclick="copyReport()">রিপোর্ট কপি</button></div>
+ <div class="panel p-4"><h2 class="font-bold mb-2">অনলাইন ব্যাকআপ</h2><p class="text-xs text-slate-500 mb-3">Firebase Firestore ক্লাউড কানেক্টেড আছে। ডেটা স্বয়ংক্রিয়ভাবে ক্লাউডে ব্যাকআপ থাকে।</p><div id="cloudStatus" class="text-xs mb-3 text-emerald-600 font-bold">● ক্লাউড সিঙ্ক চালু আছে</div><div class="grid grid-cols-2 gap-2"><button class="btn soft" onclick="cloudRestore()">ক্লাউড থেকে আনুন</button><button class="btn primary" onclick="cloudSync()">এখনই ব্যাকআপ</button></div><button class="btn danger w-full mt-2" onclick="toggleDark()">ডার্ক মোড চালু/বন্ধ</button></div>
+</section>
 </main>
 <nav class="nav"><button class="active" data-tab="home" onclick="tab('home')"><i data-lucide="house"></i>হোম</button><button data-tab="transactions" onclick="tab('transactions')"><i data-lucide="book-open"></i>আয়-ব্যয়</button><button data-tab="remittance" onclick="tab('remittance')"><i data-lucide="send"></i>দেশে টাকা</button><button data-tab="loans" onclick="tab('loans')"><i data-lucide="handshake"></i>ধার-দেনা</button><button data-tab="mess" onclick="tab('mess')"><i data-lucide="shopping-cart"></i>মেস বাজার</button><button data-tab="reports" onclick="tab('reports')"><i data-lucide="chart-no-axes-column"></i>রিপোর্ট</button></nav>
 </div>
@@ -183,7 +194,6 @@ function tab(id){
   document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===id));
   document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));
   
-  // মেস বাজার ট্যাবে থাকলে ওপরের পার্সোনাল সামারি কার্ড লুকিয়ে ফেলা
   const summary = document.getElementById('personalSummary');
   if(id === 'mess') {
     summary.style.display = 'none';
@@ -251,11 +261,178 @@ function render(){
   document.getElementById('messCount').textContent=bn(messArr.length)+' টি বাজার';
   document.getElementById('messList').innerHTML=[...messArr].sort((a,b)=>b.date.localeCompare(a.date)).map(m=>`<div class="panel p-4 flex justify-between gap-2"><div><span class="pill font-bold text-emerald-700 bg-emerald-50">${esc(m.shopper)}</span><p class="font-bold mt-1 text-sm">${esc(m.items)}</p><p class="text-xs text-slate-500 mt-0.5">${m.date}</p></div><div class="text-right"><b class="text-emerald-800 text-sm">${money(m.amountSAR,m.amountBDT)}</b><button class="block text-xs text-rose-600 ml-auto mt-2" onclick="del('mess','${m.id}')">মুছুন</button></div></div>`).join('')||empty('মেসের কোনো বাজার খরচ যোগ করা হয়নি');
 
-  let total=Math.max(1,iS),rp=Math.min(100,Math.round(rS/total*100)),ep=Math.min(100-rp,Math.round(Math.max(0,eS-aS)/total*100)),sp=100-rp-ep;
+  let myFoodShareSAR = mS / members;
+  let myFoodShareBDT = mB / members;
+  let totalWithFoodSAR = eS + myFoodShareSAR;
+  let totalWithFoodBDT = eB + myFoodShareBDT;
+
+  let total=Math.max(1,iS),rp=Math.min(100,Math.round(rS/total*100)),ep=Math.min(100-rp,Math.round(Math.max(0,totalWithFoodSAR-aS)/total*100)),sp=Math.max(0,100-rp-ep);
   [['remit',rp],['expense',ep],['save',sp]].forEach(([id,p])=>{document.getElementById(id+'Bar').style.width=p+'%';document.getElementById(id+'Pct').textContent=bn(p)+'%'});
-  document.getElementById('reportStats').innerHTML=[['প্রাপ্ত আয়',iS,iB],['মোট খরচ',eS,eB],['মোট রেমিট্যান্স',rS,rB],['নিট রেমিট্যান্স',rS-aS,rB-aB],['দেনা বাকি',payable,null],['পাওনা বাকি',recv,null],['মেস বাজার মোট',mS,mB]].map(([name,s,b])=>`<div class="flex justify-between gap-3 text-sm"><span class="text-slate-500">${name}</span><b>${b===null?'৳ '+bn(s*state.rate):money(s,b)}</b></div>`).join('');
+  
+  document.getElementById('reportStats').innerHTML=[
+    ['প্রাপ্ত আয়',iS,iB],
+    ['ব্যক্তিগত খরচ',eS,eB],
+    ['মেসের খাবার খরচ (জনপ্রতি)',myFoodShareSAR,myFoodShareBDT],
+    ['সর্বমোট খরচ (ব্যক্তিগত + খাবার)',totalWithFoodSAR,totalWithFoodBDT],
+    ['মোট রেমিট্যান্স',rS,rB],
+    ['নিট রেমিট্যান্স',rS-aS,rB-aB],
+    ['দেনা বাকি',payable,null],
+    ['পাওনা বাকি',recv,null]
+  ].map(([name,s,b])=>`<div class="flex justify-between gap-3 text-sm"><span class="text-slate-500">${name}</span><b>${b===null?'৳ '+bn(s*state.rate):money(s,b)}</b></div>`).join('');
   lucide.createIcons();
 }
+
+// এক ক্লিকে মাল্টি-পেজ সম্পূর্ণ পিডিএফ তৈরি
+function generateAllPagesPDF(){
+  let tx=state.transactions.filter(selected);
+  let rem=state.remittances.filter(selected);
+  let messArr=(state.mess||[]).filter(selected);
+  let inc=tx.filter(x=>x.type==='income');
+  let exp=tx.filter(x=>x.type==='expense');
+  let sum=(arr,k)=>arr.reduce((s,x)=>s+Number(x[k]||0),0);
+  
+  let iS=sum(inc,'amountSAR'), iB=sum(inc,'amountBDT');
+  let eS=sum(exp,'amountSAR'), eB=sum(exp,'amountBDT');
+  let rS=rem.reduce((s,x)=>s+x.amountSAR+(x.feeSAR||0),0), rB=sum(rem,'amountBDT');
+  let aS=sum(exp.filter(x=>x.category==='দেশ থেকে আকামার জন্য আনা'),'amountSAR'), aB=sum(exp.filter(x=>x.category==='দেশ থেকে আকামার জন্য আনা'),'amountBDT');
+  let mS=sum(messArr,'amountSAR'), mB=sum(messArr,'amountBDT');
+  let members=state.messMembers||11;
+  let myFoodShareSAR = mS / members;
+  let myFoodShareBDT = mB / members;
+  let totalExpenseSAR = eS + myFoodShareSAR;
+  let totalExpenseBDT = eB + myFoodShareBDT;
+  let payable=state.loans.filter(x=>x.type==='taken').reduce((s,x)=>s+Math.max(0,x.amountBDT-(x.paidBDT||0)),0);
+  let recv=state.loans.filter(x=>x.type==='given').reduce((s,x)=>s+Math.max(0,x.amountBDT-(x.paidBDT||0)),0);
+
+  let html = `<!doctype html><html><head><meta charset="utf-8"><title>আমার হিসাব - পূর্ণাঙ্গ আর্থিক প্রতিবেদন</title>
+  <style>
+    @page { size: A4 portrait; margin: 18mm 15mm 18mm 15mm; }
+    body { font-family: 'Hind Siliguri', 'Segoe UI', Arial, sans-serif; color: #0f172a; margin: 0; padding: 0; }
+    .page-sheet { page-break-after: always; min-height: 90vh; display: flex; flex-direction: column; justify-content: space-between; }
+    .page-sheet:last-child { page-break-after: avoid; }
+    .header-box { border-bottom: 2px solid #047857; padding-bottom: 8px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-end; }
+    .app-title { font-size: 20px; font-weight: bold; color: #047857; margin: 0; }
+    .page-title { font-size: 14px; font-weight: 600; color: #334155; margin: 2px 0 0; }
+    .meta-text { font-size: 11px; color: #64748b; text-align: right; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
+    th, td { border: 1px solid #cbd5e1; padding: 8px 10px; text-align: left; }
+    th { background: #f1f5f9; font-weight: 700; color: #1e293b; }
+    .text-right { text-align: right; }
+    .badge-in { color: #047857; font-weight: 600; }
+    .badge-out { color: #be123c; font-weight: 600; }
+    .box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; margin-top: 14px; }
+    .summary-card { background: #ecfdf5; border: 1.5px solid #10b981; padding: 16px; border-radius: 10px; margin-bottom: 16px; }
+    .summary-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #94a3b8; font-size: 13px; }
+    .summary-row:last-child { border-bottom: none; font-size: 15px; font-weight: bold; color: #065f46; padding-top: 10px; }
+    .footer { font-size: 10px; color: #94a3b8; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-top: 20px; }
+  </style></head><body>`;
+
+  // --- পৃষ্ঠা ১: আয় ও উপার্জনের খাতা ---
+  html += `<div class="page-sheet"><div>
+    <div class="header-box">
+      <div><h1 class="app-title">আমার হিসাব</h1><p class="page-title">পৃষ্ঠা ১: আয়ের বিবরণী (Income Sheet)</p></div>
+      <div class="meta-text">তারিখ: ${dateNow()}<br>রেট: ৳ ${bn(state.rate,2)}</div>
+    </div>
+    <table><thead><tr><th>তারিখ</th><th>ক্যাটাগরি</th><th>বিবরণ</th><th class="text-right">SAR</th><th class="text-right">BDT</th></tr></thead><tbody>`;
+  if(!inc.length) html += `<tr><td colspan="5" style="text-align:center;">কোনো আয়ের তথ্য নেই</td></tr>`;
+  inc.forEach(t=>{ html += `<tr><td>${t.date}</td><td>${esc(t.category)}</td><td>${esc(t.note)}</td><td class="text-right badge-in">${bn(t.amountSAR,2)}</td><td class="text-right badge-in">৳ ${bn(t.amountBDT)}</td></tr>`; });
+  html += `</tbody></table>
+    <div class="box"><b>মোট আয়:</b> ${bn(iS,2)} SAR | ৳ ${bn(iB)}</div>
+  </div><div class="footer">আমার হিসাব অ্যাপ • পৃষ্ঠা ১/৬</div></div>`;
+
+  // --- পৃষ্ঠা ২: খরচের খাতা ---
+  html += `<div class="page-sheet"><div>
+    <div class="header-box">
+      <div><h1 class="app-title">আমার হিসাব</h1><p class="page-title">পৃষ্ঠা ২: খরচের বিবরণী (Expense Sheet)</p></div>
+      <div class="meta-text">তারিখ: ${dateNow()}</div>
+    </div>
+    <table><thead><tr><th>তারিখ</th><th>ক্যাটাগরি</th><th>বিবরণ</th><th class="text-right">SAR</th><th class="text-right">BDT</th></tr></thead><tbody>`;
+  if(!exp.length) html += `<tr><td colspan="5" style="text-align:center;">কোনো খরচের তথ্য নেই</td></tr>`;
+  exp.forEach(t=>{ html += `<tr><td>${t.date}</td><td>${esc(t.category)}</td><td>${esc(t.note)}</td><td class="text-right badge-out">${bn(t.amountSAR,2)}</td><td class="text-right badge-out">৳ ${bn(t.amountBDT)}</td></tr>`; });
+  html += `</tbody></table>
+    <div class="box"><b>মোট ব্যক্তিগত খরচ:</b> ${bn(eS,2)} SAR | ৳ ${bn(eB)}</div>
+  </div><div class="footer">আমার হিসাব অ্যাপ • পৃষ্ঠা ২/৬</div></div>`;
+
+  // --- পৃষ্ঠা ৩: রেমিট্যান্সের খাতা ---
+  html += `<div class="page-sheet"><div>
+    <div class="header-box">
+      <div><h1 class="app-title">আমার হিসাব</h1><p class="page-title">পৃষ্ঠা ৩: রেমিট্যান্স ও দেশে পাঠানো টাকা</p></div>
+      <div class="meta-text">তারিখ: ${dateNow()}</div>
+    </div>
+    <table><thead><tr><th>তারিখ</th><th>প্রাপক / বিবরণ</th><th>রেট</th><th class="text-right">SAR (ফি সহ)</th><th class="text-right">দেশে জমা (BDT)</th></tr></thead><tbody>`;
+  if(!rem.length) html += `<tr><td colspan="5" style="text-align:center;">কোনো রেমিট্যান্স তথ্য নেই</td></tr>`;
+  rem.forEach(r=>{ html += `<tr><td>${r.date}</td><td>${esc(r.recipient)}</td><td>৳ ${bn(r.rate,2)}</td><td class="text-right">${bn(r.amountSAR+(r.feeSAR||0),2)}</td><td class="text-right font-bold" style="color:#1d4ed8">৳ ${bn(r.amountBDT)}</td></tr>`; });
+  html += `</tbody></table>
+    <div class="box"><b>মোট রেমিট্যান্স পাঠানো:</b> ${bn(rS,2)} SAR | ৳ ${bn(rB)}</div>
+  </div><div class="footer">আমার হিসাব অ্যাপ • পৃষ্ঠা ৩/৬</div></div>`;
+
+  // --- পৃষ্ঠা ৪: ধার-দেনার খাতা ---
+  html += `<div class="page-sheet"><div>
+    <div class="header-box">
+      <div><h1 class="app-title">আমার হিসাব</h1><p class="page-title">পৃষ্ঠা ৪: ধার ও দেনা-পাওনার হিসাব</p></div>
+      <div class="meta-text">তারিখ: ${dateNow()}</div>
+    </div>
+    <table><thead><tr><th>তারিখ</th><th>ব্যক্তির নাম</th><th>ধরন</th><th class="text-right">মোট (BDT)</th><th class="text-right">পরিশোধ</th><th class="text-right">বাকি (BDT)</th></tr></thead><tbody>`;
+  state.loans.forEach(l=>{
+    let remD = Math.max(0, l.amountBDT - (l.paidBDT||0));
+    html += `<tr><td>${l.date}</td><td><b>${esc(l.person)}</b></td><td>${l.type==='taken'?'আমি দেবো (দেনা)':'আমি পাবো (পাওনা)'}</td><td class="text-right">৳ ${bn(l.amountBDT)}</td><td class="text-right">৳ ${bn(l.paidBDT||0)}</td><td class="text-right font-bold ${l.type==='taken'?'badge-out':'badge-in'}">৳ ${bn(remD)}</td></tr>`;
+  });
+  html += `</tbody></table>
+    <div class="box" style="display:flex;justify-content:space-between">
+      <span><b>আমি দেবো (দেনা বাকি):</b> ৳ ${bn(payable)}</span>
+      <span><b>আমি পাবো (পাওনা বাকি):</b> ৳ ${bn(recv)}</span>
+    </div>
+  </div><div class="footer">আমার হিসাব অ্যাপ • পৃষ্ঠা ৪/৬</div></div>`;
+
+  // --- পৃষ্ঠা ৫: মেস বাজারের খাতা ---
+  html += `<div class="page-sheet"><div>
+    <div class="header-box">
+      <div><h1 class="app-title">আমার হিসাব</h1><p class="page-title">পৃষ্ঠা ৫: মেস বাজারের হিসাব খাতা</p></div>
+      <div class="meta-text">মেস সদস্য: ${members} জন</div>
+    </div>
+    <table><thead><tr><th>তারিখ</th><th>বাজারকারী</th><th>ক্রয়কৃত আইটেম</th><th class="text-right">SAR</th><th class="text-right">BDT</th></tr></thead><tbody>`;
+  if(!messArr.length) html += `<tr><td colspan="5" style="text-align:center;">মেসের কোনো বাজার রেকর্ড নেই</td></tr>`;
+  messArr.forEach(m=>{ html += `<tr><td>${m.date}</td><td><b>${esc(m.shopper)}</b></td><td>${esc(m.items)}</td><td class="text-right">${bn(m.amountSAR,2)}</td><td class="text-right">৳ ${bn(m.amountBDT)}</td></tr>`; });
+  html += `</tbody></table>
+    <div class="summary-card" style="margin-top:16px;">
+      <div class="summary-row"><span>মেসের মোট বাজার খরচ:</span><b>${bn(mS,2)} SAR (৳ ${bn(mB)})</b></div>
+      <div class="summary-row"><span>মোট সদস্য সংখ্যা:</span><b>${members} জন</b></div>
+      <div class="summary-row"><span>জনপ্রতি খাবার/বাজার খরচ:</span><b style="color:#047857">${bn(myFoodShareSAR,2)} SAR (৳ ${bn(myFoodShareBDT)})</b></div>
+    </div>
+  </div><div class="footer">আমার হিসাব অ্যাপ • পৃষ্ঠা ৫/৬</div></div>`;
+
+  // --- পৃষ্ঠা ৬: চূড়ান্ত সম্মিলিত আর্থিক সারাংশ (Final Summary) ---
+  html += `<div class="page-sheet"><div>
+    <div class="header-box">
+      <div><h1 class="app-title">আমার হিসাব</h1><p class="page-title">পৃষ্ঠা ৬: চূড়ান্ত সামগ্রিক আর্থিক সারাংশ (Final Summary)</p></div>
+      <div class="meta-text">তারিখ: ${dateNow()}</div>
+    </div>
+    <div class="summary-card">
+      <h3 style="margin:0 0 12px;font-size:16px;color:#047857;border-bottom:1px solid #a7f3d0;padding-bottom:6px">একনজরে সর্বমোট হিসাব (মেসের খাবার খরচ অন্তর্ভুক্ত)</h3>
+      <div class="summary-row"><span>১. প্রাপ্ত মোট আয়:</span><b>${money(iS,iB)}</b></div>
+      <div class="summary-row"><span>২. ব্যক্তিগত খরচ:</span><b>${money(eS,eB)}</b></div>
+      <div class="summary-row"><span>৩. মেস বাজার হতে আমার খাবার খরচ (${members} জনের শেয়ার):</span><b style="color:#b45309">${money(myFoodShareSAR,myFoodShareBDT)}</b></div>
+      <div class="summary-row"><span>৪. সর্বমোট খরচ (ব্যক্তিগত + মেসের খাবার):</span><b style="color:#be123c">${money(totalExpenseSAR,totalExpenseBDT)}</b></div>
+      <div class="summary-row"><span>৫. দেশে পাঠানো রেমিট্যান্স (গ্রস):</span><b>${money(rS,rB)}</b></div>
+      <div class="summary-row"><span>৬. দেশ থেকে আনা খরচ (আকামা বাবদ):</span><b>${money(aS,aB)}</b></div>
+      <div class="summary-row"><span>৭. নিট রেমিট্যান্স (প্রকৃত দেশে সঞ্চিত):</span><b style="color:#047857">${money(rS-aS,rB-aB)}</b></div>
+      <div class="summary-row"><span>৮. দেনা বাকি (আমি দেনাদার):</span><b style="color:#be123c">৳ ${bn(payable)}</b></div>
+      <div class="summary-row"><span>৯. পাওনা বাকি (আমি পাওনাদার):</span><b style="color:#047857">৳ ${bn(recv)}</b></div>
+      <div class="summary-row"><span>হিসাবকালীন অবশিষ্ট নিট স্থিতি (আয় − সব খরচ − রেমিট্যান্স):</span><span>${money(iS - totalExpenseSAR - (rS-aS), iB - totalExpenseBDT - (rB-aB))}</span></div>
+    </div>
+    <div class="box" style="font-size:12px;line-height:1.6;color:#475569">
+      <b>নোট:</b> এই সমন্বিত প্রতিবেদনে মেস বাজারের জনপ্রতি অংশটি ব্যক্তিগত খাবার খরচ হিসেবে অন্তর্ভুক্ত করা হয়েছে। এটি সম্পূর্ণ স্বয়ংক্রিয়ভাবে হিসাবকৃত চূড়ান্ত বিবরণী।
+    </div>
+  </div><div class="footer">আমার হিসাব অ্যাপ • পৃষ্ঠা ৬/৬ (সমাপ্ত)</div></div>`;
+
+  html += `</body></html>`;
+
+  let w = window.open('', '_blank');
+  w.document.write(html);
+  w.document.close();
+  setTimeout(()=>{ w.print(); }, 500);
+}
+
 function txCard(t,delBtn){let inc=t.type==='income';return `<div class="panel p-3 flex items-center justify-between gap-2"><div class="flex gap-3 items-center min-w-0"><div class="w-10 h-10 rounded-xl flex items-center justify-center ${inc?'bg-emerald-50 text-emerald-700':'bg-rose-50 text-rose-600'}"><i data-lucide="${inc?'arrow-down-left':'arrow-up-right'}"></i></div><div class="min-w-0"><b class="block text-sm truncate">${esc(t.category||t.note)}</b><p class="text-[11px] text-slate-500 truncate">${esc(t.note||'')} • ${t.date}</p></div></div><div class="text-right shrink-0"><b class="text-sm ${inc?'text-emerald-700':'text-rose-600'}">${inc?'+':'−'} ${money(t.amountSAR,t.amountBDT)}</b>${delBtn?`<button class="block text-[11px] text-rose-500 ml-auto mt-1" onclick="del('transactions','${t.id}')">মুছুন</button>`:''}</div></div>`}
 function empty(s){return `<div class="panel p-6 text-center text-sm text-slate-400">${s}</div>`}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -273,4 +450,3 @@ render();
 </script>
 </body>
 </html>
-```[span_2](start_span)[span_2](end_span)
