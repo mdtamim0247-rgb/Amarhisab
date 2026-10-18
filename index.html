@@ -1,2303 +1,2455 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b1020" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
-  <!-- আপনার existing manifest.json -->
-  <link rel="manifest" href="manifest.json" />
-
-  <title>Amar Hisab — Smart Money Manager</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    :root {
-      --bg: #070b16;
-      --card: rgba(20, 27, 47, .78);
-      --card2: rgba(255,255,255,.06);
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --line: rgba(255,255,255,.09);
-      --primary: #7c5cff;
-      --primary2: #9b8cff;
-      --green: #20d394;
-      --red: #ff5c7c;
-      --yellow: #ffc857;
-      --blue: #38bdf8;
-      --radius: 24px;
-    }
-
-    body.light {
-      --bg: #f4f7fb;
-      --card: rgba(255,255,255,.9);
-      --card2: rgba(15,23,42,.05);
-      --text: #101827;
-      --muted: #64748b;
-      --line: rgba(15,23,42,.1);
-    }
-
-    body {
-      min-height: 100vh;
-      background:
-        radial-gradient(circle at 10% 0%, rgba(124,92,255,.25), transparent 30%),
-        radial-gradient(circle at 100% 20%, rgba(56,189,248,.16), transparent 30%),
-        var(--bg);
-      color: var(--text);
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      overflow-x: hidden;
-    }
-
-    button, input, select {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-      border: 0;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    /* ================= LOGIN ================= */
-
-    #authScreen {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 22px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(2px);
-      animation: float 7s ease-in-out infinite;
-      pointer-events: none;
-    }
-
-    .orb.one {
-      width: 230px;
-      height: 230px;
-      background: rgba(124,92,255,.18);
-      top: -80px;
-      left: -60px;
-    }
-
-    .orb.two {
-      width: 200px;
-      height: 200px;
-      background: rgba(32,211,148,.12);
-      right: -70px;
-      bottom: 10%;
-      animation-delay: -2s;
-    }
-
-    .auth-card {
-      width: 100%;
-      max-width: 430px;
-      background: rgba(15,23,42,.78);
-      backdrop-filter: blur(28px);
-      border: 1px solid var(--line);
-      border-radius: 32px;
-      padding: 30px;
-      box-shadow: 0 30px 80px rgba(0,0,0,.35);
-      animation: slideUp .7s ease;
-      position: relative;
-      z-index: 2;
-    }
-
-    body.light .auth-card {
-      background: rgba(255,255,255,.88);
-    }
-
-    .brand {
-      text-align: center;
-      margin-bottom: 26px;
-    }
-
-    .logo {
-      width: 76px;
-      height: 76px;
-      border-radius: 24px;
-      margin: auto;
-      display: grid;
-      place-items: center;
-      font-size: 35px;
-      background: linear-gradient(135deg, #7c5cff, #38bdf8);
-      box-shadow: 0 15px 40px rgba(124,92,255,.35);
-      animation: logoPulse 3s infinite;
-    }
-
-    .brand h1 {
-      margin-top: 16px;
-      font-size: 30px;
-      letter-spacing: -.8px;
-    }
-
-    .brand p {
-      color: var(--muted);
-      margin-top: 7px;
-      font-size: 14px;
-    }
-
-    .tabs {
-      display: flex;
-      padding: 5px;
-      background: var(--card2);
-      border-radius: 15px;
-      margin-bottom: 20px;
-    }
-
-    .tabs button {
-      flex: 1;
-      padding: 11px;
-      border-radius: 12px;
-      color: var(--muted);
-      background: transparent;
-    }
-
-    .tabs button.active {
-      background: var(--primary);
-      color: white;
-      box-shadow: 0 6px 18px rgba(124,92,255,.3);
-    }
-
-    .input {
-      margin-bottom: 13px;
-    }
-
-    .input label {
-      display: block;
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 7px;
-    }
-
-    .input input,
-    .input select {
-      width: 100%;
-      padding: 14px 15px;
-      border-radius: 14px;
-      outline: none;
-      color: var(--text);
-      background: var(--card2);
-      border: 1px solid var(--line);
-    }
-
-    .primary-btn {
-      width: 100%;
-      padding: 15px;
-      border-radius: 15px;
-      color: white;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--primary), #4f8cff);
-      box-shadow: 0 12px 25px rgba(79,140,255,.22);
-      transition: .2s;
-    }
-
-    .primary-btn:active {
-      transform: scale(.97);
-    }
-
-    .social-credit {
-      text-align: center;
-      margin-top: 22px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .social-credit strong {
-      color: var(--text);
-    }
-
-    .socials {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 11px;
-    }
-
-    .socials a {
-      width: 40px;
-      height: 40px;
-      display: grid;
-      place-items: center;
-      border-radius: 13px;
-      background: var(--card2);
-      border: 1px solid var(--line);
-      text-decoration: none;
-      font-size: 18px;
-      transition: .25s;
-    }
-
-    .socials a:hover {
-      transform: translateY(-4px) scale(1.05);
-    }
-
-    /* ================= APP ================= */
-
-    #app {
-      min-height: 100vh;
-      padding-bottom: 95px;
-    }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      padding: 15px 17px;
-      backdrop-filter: blur(20px);
-      background: rgba(7,11,22,.72);
-      border-bottom: 1px solid var(--line);
-    }
-
-    body.light .topbar {
-      background: rgba(244,247,251,.75);
-    }
-
-    .topbar-inner {
-      max-width: 1100px;
-      margin: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .mini-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .mini-logo {
-      width: 42px;
-      height: 42px;
-      display: grid;
-      place-items: center;
-      border-radius: 13px;
-      background: linear-gradient(135deg, var(--primary), #38bdf8);
-    }
-
-    .mini-brand small {
-      display: block;
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .icon-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 13px;
-      color: var(--text);
-      background: var(--card2);
-      border: 1px solid var(--line);
-    }
-
-    .container {
-      width: min(1100px, calc(100% - 30px));
-      margin: auto;
-      padding-top: 20px;
-    }
-
-    .page {
-      display: none;
-      animation: fadeIn .35s ease;
-    }
-
-    .page.active {
-      display: block;
-    }
-
-    /* Balance */
-
-    .balance-card {
-      position: relative;
-      overflow: hidden;
-      padding: 27px;
-      border-radius: 30px;
-      background:
-        radial-gradient(circle at 100% 0%, rgba(56,189,248,.22), transparent 40%),
-        linear-gradient(135deg, #171b38, #11172a);
-      border: 1px solid rgba(255,255,255,.1);
-      box-shadow: 0 25px 60px rgba(0,0,0,.25);
-    }
-
-    .balance-card::after {
-      content: "";
-      position: absolute;
-      width: 180px;
-      height: 180px;
-      right: -80px;
-      bottom: -100px;
-      border-radius: 50%;
-      background: rgba(124,92,255,.25);
-      filter: blur(25px);
-    }
-
-    .balance-label {
-      color: #aab5ca;
-      font-size: 13px;
-    }
-
-    .balance {
-      font-size: clamp(38px, 9vw, 64px);
-      font-weight: 800;
-      letter-spacing: -2px;
-      margin: 8px 0 20px;
-    }
-
-    .balance span {
-      font-size: 20px;
-      letter-spacing: 0;
-      color: #b6c1d4;
-    }
-
-    .balance-actions {
-      display: flex;
-      gap: 10px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .small-action {
-      padding: 10px 14px;
-      border-radius: 13px;
-      color: white;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.1);
-    }
-
-    /* Stats */
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin: 15px 0;
-    }
-
-    .stat {
-      padding: 17px;
-      background: var(--card);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      animation: slideUp .5s ease both;
-    }
-
-    .stat:nth-child(2) { animation-delay: .05s; }
-    .stat:nth-child(3) { animation-delay: .1s; }
-    .stat:nth-child(4) { animation-delay: .15s; }
-
-    .stat-icon {
-      font-size: 20px;
-    }
-
-    .stat small {
-      display: block;
-      color: var(--muted);
-      margin: 8px 0 5px;
-    }
-
-    .stat strong {
-      font-size: 20px;
-    }
-
-    .green { color: var(--green); }
-    .red { color: var(--red); }
-    .yellow { color: var(--yellow); }
-    .blue { color: var(--blue); }
-
-    .section-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 24px 0 12px;
-    }
-
-    .section-title h2 {
-      font-size: 18px;
-    }
-
-    .section-title button {
-      color: var(--primary2);
-      background: transparent;
-      font-size: 13px;
-    }
-
-    .grid2 {
-      display: grid;
-      grid-template-columns: 1.4fr .8fr;
-      gap: 15px;
-    }
-
-    .card {
-      background: var(--card);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 20px;
-    }
-
-    .chart-wrap {
-      height: 280px;
-      position: relative;
-    }
-
-    .insight {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      padding: 14px;
-      border-radius: 16px;
-      background: var(--card2);
-      margin-top: 12px;
-    }
-
-    .insight-icon {
-      font-size: 23px;
-    }
-
-    .insight p {
-      font-size: 13px;
-      line-height: 1.5;
-      color: var(--muted);
-    }
-
-    /* Transactions */
-
-    .transaction {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 13px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .transaction:last-child {
-      border-bottom: 0;
-    }
-
-    .tx-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      background: var(--card2);
-      font-size: 20px;
-    }
-
-    .tx-info {
-      flex: 1;
-    }
-
-    .tx-info strong {
-      font-size: 14px;
-    }
-
-    .tx-info small {
-      display: block;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-
-    .tx-amount {
-      font-weight: 700;
-    }
-
-    /* Bottom Nav */
-
-    .bottom-nav {
-      position: fixed;
-      left: 50%;
-      bottom: 13px;
-      transform: translateX(-50%);
-      width: min(620px, calc(100% - 24px));
-      z-index: 50;
-      padding: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      background: rgba(16,22,40,.88);
-      backdrop-filter: blur(25px);
-      border: 1px solid var(--line);
-      border-radius: 23px;
-      box-shadow: 0 20px 50px rgba(0,0,0,.35);
-    }
-
-    body.light .bottom-nav {
-      background: rgba(255,255,255,.9);
-    }
-
-    .nav-btn {
-      width: 65px;
-      height: 55px;
-      border-radius: 17px;
-      background: transparent;
-      color: var(--muted);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-    }
-
-    .nav-btn.active {
-      color: white;
-      background: linear-gradient(135deg, var(--primary), #4f8cff);
-      box-shadow: 0 8px 20px rgba(124,92,255,.3);
-    }
-
-    body.light .nav-btn.active {
-      color: white;
-    }
-
-    .nav-btn span:first-child {
-      font-size: 19px;
-    }
-
-    .nav-btn span:last-child {
-      font-size: 9px;
-    }
-
-    .add-nav {
-      width: 57px;
-      height: 57px;
-      border-radius: 19px;
-      color: white;
-      background: linear-gradient(135deg, var(--green), #0ea5e9);
-      font-size: 27px;
-      box-shadow: 0 10px 25px rgba(32,211,148,.28);
-      animation: gentlePulse 2.8s infinite;
-    }
-
-    /* Modal */
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
-      background: rgba(0,0,0,.6);
-      backdrop-filter: blur(8px);
-    }
-
-    .modal.show {
-      display: flex;
-    }
-
-    .modal-box {
-      width: min(620px, 100%);
-      max-height: 92vh;
-      overflow-y: auto;
-      padding: 22px;
-      background: var(--bg);
-      border: 1px solid var(--line);
-      border-radius: 28px 28px 0 0;
-      animation: sheetUp .35s ease;
-    }
-
-    .modal-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-    }
-
-    .close {
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
-      background: var(--card2);
-      color: var(--text);
-    }
-
-    .type-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .type-btn {
-      padding: 15px 8px;
-      border-radius: 16px;
-      background: var(--card2);
-      color: var(--text);
-      border: 1px solid var(--line);
-    }
-
-    .type-btn.selected {
-      border-color: var(--primary);
-      background: rgba(124,92,255,.16);
-    }
-
-    /* Members */
-
-    .member {
-      display: flex;
-      align-items: center;
-      gap: 13px;
-      padding: 14px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .avatar {
-      width: 46px;
-      height: 46px;
-      border-radius: 15px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, var(--primary), #38bdf8);
-      color: white;
-      font-weight: 800;
-    }
-
-    .member-info {
-      flex: 1;
-    }
-
-    .member-info small {
-      display: block;
-      color: var(--muted);
-      margin-top: 3px;
-    }
-
-    /* About */
-
-    .developer {
-      text-align: center;
-      padding: 35px 20px;
-    }
-
-    .dev-avatar {
-      width: 90px;
-      height: 90px;
-      margin: auto;
-      border-radius: 28px;
-      display: grid;
-      place-items: center;
-      font-size: 35px;
-      background: linear-gradient(135deg, var(--primary), var(--blue));
-      box-shadow: 0 18px 40px rgba(124,92,255,.3);
-    }
-
-    .developer h2 {
-      margin-top: 15px;
-    }
-
-    .developer p {
-      color: var(--muted);
-      margin-top: 7px;
-    }
-
-    .developer .socials {
-      margin-top: 20px;
-    }
-
-    .setting-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 17px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .setting-row div strong {
-      display: block;
-      font-size: 14px;
-    }
-
-    .setting-row div small {
-      display: block;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-
-    /* Toast */
-
-    #toast {
-      position: fixed;
-      left: 50%;
-      top: 20px;
-      transform: translate(-50%, -100px);
-      z-index: 200;
-      padding: 13px 18px;
-      border-radius: 15px;
-      color: white;
-      background: #172033;
-      border: 1px solid var(--line);
-      box-shadow: 0 15px 40px rgba(0,0,0,.25);
-      transition: .35s;
-      font-size: 13px;
-    }
-
-    #toast.show {
-      transform: translate(-50%, 0);
-    }
-
-    /* Animations */
-
-    @keyframes float {
-      0%,100% { transform: translateY(0); }
-      50% { transform: translateY(25px); }
-    }
-
-    @keyframes logoPulse {
-      0%,100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-
-    @keyframes gentlePulse {
-      0%,100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes sheetUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @media(max-width: 760px) {
-      .stats {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .grid2 {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media(max-width: 430px) {
-      .auth-card {
-        padding: 22px;
-        border-radius: 26px;
-      }
-
-      .balance-card {
-        padding: 22px;
-      }
-
-      .balance {
-        font-size: 43px;
-      }
-
-      .container {
-        width: min(100% - 22px, 1100px);
-      }
-
-      .stat {
-        padding: 14px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<meta name="description" content="Amar Hisab - Personal Finance & Smart Mess">
+<link rel="manifest" href="./manifest.json">
+<title>Amar Hisab</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+
+<style>
+:root{
+--bg:#07111f;--card:#0d1d31;--card2:#132943;--line:#243952;
+--text:#f5f8ff;--muted:#91a5bd;--primary:#6c63ff;
+--cyan:#24d7ff;--green:#27d17f;--red:#ff5c78;--gold:#ffc857;
+}
+*{box-sizing:border-box}
+body{
+margin:0;background:
+radial-gradient(circle at 10% 0,#182e55,transparent 35%),
+radial-gradient(circle at 100% 20%,#123945,transparent 32%),var(--bg);
+color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,
+"Noto Sans Bengali",sans-serif;min-height:100vh
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.muted{color:var(--muted)}
+.success{color:var(--green)}
+.danger{color:var(--red)}
+
+.auth{
+min-height:100vh;display:grid;place-items:center;padding:20px;
+position:relative;overflow:hidden
+}
+.orb{
+position:absolute;border-radius:50%;filter:blur(5px);opacity:.35;
+animation:float 8s ease-in-out infinite
+}
+.orb1{width:240px;height:240px;background:#6c63ff;left:-80px;top:-80px}
+.orb2{width:190px;height:190px;background:#24d7ff;right:-70px;bottom:5%}
+@keyframes float{
+50%{transform:translate(25px,20px) scale(1.08)}
+}
+.authbox{
+width:min(440px,100%);background:rgba(10,24,42,.9);
+border:1px solid var(--line);border-radius:30px;padding:28px;
+box-shadow:0 25px 80px #0008;backdrop-filter:blur(20px);
+position:relative;z-index:2
+}
+.logo{
+width:72px;height:72px;border-radius:22px;
+display:grid;place-items:center;font-size:35px;
+background:linear-gradient(135deg,var(--primary),var(--cyan));
+box-shadow:0 15px 40px #6c63ff55;
+animation:pulse 3s infinite
+}
+@keyframes pulse{50%{transform:translateY(-5px)}}
+.authbox h1{margin:18px 0 5px;font-size:30px}
+.tabs{
+display:grid;grid-template-columns:1fr 1fr;background:#081625;
+padding:4px;border-radius:14px;margin:20px 0
+}
+.tabs button{
+border:0;background:transparent;color:var(--muted);
+padding:11px;border-radius:10px
+}
+.tabs button.active{background:var(--card2);color:#fff}
+.field{margin:12px 0}
+.field label{
+display:block;font-size:12px;color:var(--muted);margin-bottom:7px
+}
+.field input,.field select,.field textarea{
+width:100%;padding:13px;border:1px solid var(--line);
+border-radius:14px;background:#081827;color:#fff;outline:none
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+border-color:var(--primary);box-shadow:0 0 0 3px #6c63ff22
+}
+.password{position:relative}
+.password button{
+position:absolute;right:5px;top:5px;border:0;
+background:transparent;color:var(--muted);padding:8px
+}
+.btn{
+border:0;border-radius:14px;padding:13px 17px;color:#fff;
+background:linear-gradient(135deg,var(--primary),#4b8dff);
+font-weight:700
+}
+.btn.green{background:linear-gradient(135deg,#16aa68,#27d17f)}
+.btn.secondary{background:#132943;border:1px solid var(--line)}
+.btn.danger{background:#351723}
+.btn.full{width:100%}
+.link{border:0;background:none;color:#78dcff}
+.dev{text-align:center;color:var(--muted);font-size:12px;margin-top:22px}
+.socials{display:flex;gap:8px;justify-content:center;margin-top:10px}
+.socials a{
+color:#fff;text-decoration:none;border:1px solid var(--line);
+background:#0d2035;padding:9px 12px;border-radius:11px
+}
+
+/* APP */
+.app{min-height:100vh;padding-bottom:85px}
+.top{
+position:sticky;top:0;z-index:20;background:#07111fdd;
+backdrop-filter:blur(18px);border-bottom:1px solid var(--line);
+padding:13px 15px
+}
+.topin{
+max-width:1150px;margin:auto;display:flex;
+justify-content:space-between;align-items:center
+}
+.brand{display:flex;align-items:center;gap:10px}
+.brandicon{
+width:42px;height:42px;border-radius:13px;
+display:grid;place-items:center;
+background:linear-gradient(135deg,var(--primary),var(--cyan))
+}
+.brand span{display:block;color:var(--muted);font-size:11px}
+.icon{
+width:42px;height:42px;border:1px solid var(--line);
+background:#0d2035;color:#fff;border-radius:13px
+}
+main{max-width:1150px;margin:auto;padding:18px 15px}
+
+.hero{
+display:grid;grid-template-columns:1.35fr .65fr;gap:15px
+}
+.card{
+background:linear-gradient(145deg,#162b48,#0c1d31);
+border:1px solid var(--line);border-radius:24px;
+box-shadow:0 20px 60px #0005
+}
+.balance{padding:25px;position:relative;overflow:hidden}
+.balance:after{
+content:"";position:absolute;width:180px;height:180px;
+border-radius:50%;right:-70px;top:-70px;background:#24d7ff18
+}
+.label{color:var(--muted);font-size:13px}
+.big{
+font-size:42px;font-weight:850;margin:8px 0
+}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.side{padding:20px}
+.mini{
+display:flex;justify-content:space-between;
+padding:12px 0;border-bottom:1px solid var(--line)
+}
+.mini:last-child{border:0}
+
+.quick{
+display:grid;grid-template-columns:repeat(5,1fr);
+gap:9px;margin:16px 0
+}
+.quick button{
+background:#10243b;color:#fff;border:1px solid var(--line);
+border-radius:17px;padding:13px 5px
+}
+.quick span{display:block;font-size:22px;margin-bottom:5px}
+.quick b{font-size:11px}
+
+.stats{
+display:grid;grid-template-columns:repeat(4,1fr);gap:11px
+}
+.stat{padding:17px}
+.stat small{color:var(--muted)}
+.stat strong{display:block;font-size:22px;margin-top:5px}
+
+.grid{
+display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px
+}
+.box{padding:18px}
+.head{
+display:flex;justify-content:space-between;align-items:center;
+gap:8px;margin-bottom:12px
+}
+.head h3{margin:0;font-size:16px}
+.chart{height:260px}
+
+.list{display:grid;gap:9px}
+.row{
+display:flex;align-items:center;justify-content:space-between;
+gap:10px;padding:12px;background:#091a2c;
+border:1px solid var(--line);border-radius:15px
+}
+.left{display:flex;align-items:center;gap:10px;min-width:0}
+.avatar{
+width:39px;height:39px;border-radius:12px;
+display:grid;place-items:center;background:#17304d;flex:none
+}
+.title{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub{font-size:11px;color:var(--muted);margin-top:3px}
+.amount{font-weight:800;white-space:nowrap}
+.income{color:var(--green)}
+.expense,.remittance{color:var(--red)}
+.borrow{color:var(--cyan)}
+.lend{color:var(--gold)}
+
+.section{margin-top:16px}
+.sectiontitle{font-size:21px;margin:0 0 12px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.toolbar input,.toolbar select{
+background:#091a2c;color:#fff;border:1px solid var(--line);
+border-radius:12px;padding:10px
+}
+.empty{text-align:center;color:var(--muted);padding:25px}
+
+.members{
+display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+gap:9px
+}
+.member{
+display:flex;justify-content:space-between;align-items:center;
+background:#091a2c;border:1px solid var(--line);
+border-radius:15px;padding:12px
+}
+.messstats{
+display:grid;grid-template-columns:repeat(3,1fr);gap:9px
+}
+.messpill{
+background:#091a2c;border:1px solid var(--line);
+border-radius:15px;padding:14px
+}
+.messpill b{display:block;font-size:19px;margin-top:5px}
+
+.modal{
+position:fixed;inset:0;z-index:100;background:#000a;
+backdrop-filter:blur(7px);display:none;
+align-items:flex-end;justify-content:center;padding:10px
+}
+.modal.show{display:flex}
+.sheet{
+width:min(650px,100%);max-height:92vh;overflow:auto;
+background:#0a1a2d;border:1px solid var(--line);
+border-radius:27px;padding:20px;
+animation:up .2s ease
+}
+@keyframes up{from{transform:translateY(30px)}to{transform:none}}
+.sheethead{
+display:flex;justify-content:space-between;align-items:center
+}
+.close{
+width:38px;height:38px;border:0;border-radius:12px;
+background:#142942;color:#fff
+}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.nav{
+position:fixed;bottom:0;left:0;right:0;z-index:50;
+background:#07111fee;backdrop-filter:blur(18px);
+border-top:1px solid var(--line);padding:8px
+}
+.navin{
+max-width:700px;margin:auto;
+display:grid;grid-template-columns:repeat(5,1fr)
+}
+.nav button{
+border:0;background:none;color:var(--muted);
+padding:7px;font-size:10px;border-radius:12px
+}
+.nav button.active{background:#142943;color:#fff}
+.nav i{font-style:normal;display:block;font-size:19px;margin-bottom:2px}
+
+.toast{
+position:fixed;z-index:200;left:50%;bottom:85px;
+transform:translate(-50%,20px);opacity:0;
+background:#132943;border:1px solid var(--line);
+padding:12px 16px;border-radius:13px;transition:.25s
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+.credit{text-align:center;color:var(--muted);font-size:11px;margin:25px 0}
+
+@media(max-width:760px){
+.hero,.grid{grid-template-columns:1fr}
+.stats{grid-template-columns:1fr 1fr}
+.quick button{padding:10px 3px}
+.big{font-size:36px}
+}
+@media(max-width:450px){
+main{padding:13px 10px}
+.authbox{padding:22px}
+.two{grid-template-columns:1fr}
+.messstats{grid-template-columns:1fr 1fr 1fr}
+.stat{padding:13px}
+.stat strong{font-size:18px}
+}
+</style>
 </head>
 
 <body>
 
-<!-- ================= AUTH ================= -->
-
-<section id="authScreen">
-
-  <div class="orb one"></div>
-  <div class="orb two"></div>
-
-  <div class="auth-card">
-
-    <div class="brand">
-      <div class="logo">৳</div>
-      <h1>Amar Hisab</h1>
-      <p>Smart • Simple • Secure</p>
-    </div>
-
-    <div class="tabs">
-      <button id="loginTab" class="active" onclick="showAuth('login')">
-        Login
-      </button>
-      <button id="registerTab" onclick="showAuth('register')">
-        Create Account
-      </button>
-    </div>
-
-    <div id="loginForm">
-
-      <div class="input">
-        <label>Email</label>
-        <input id="loginEmail" type="email" placeholder="your@email.com">
-      </div>
-
-      <div class="input">
-        <label>Password</label>
-        <input id="loginPassword" type="password" placeholder="••••••••">
-      </div>
-
-      <button class="primary-btn" onclick="login()">
-        Login
-      </button>
-
-    </div>
-
-    <div id="registerForm" class="hidden">
-
-      <div class="input">
-        <label>Your Name</label>
-        <input id="regName" placeholder="Tamim">
-      </div>
-
-      <div class="input">
-        <label>Email</label>
-        <input id="regEmail" type="email" placeholder="your@email.com">
-      </div>
-
-      <div class="input">
-        <label>Password</label>
-        <input id="regPassword" type="password" placeholder="Minimum 6 characters">
-      </div>
-
-      <button class="primary-btn" onclick="register()">
-        Create Account
-      </button>
-
-    </div>
-
-    <div class="social-credit">
-      Created & Designed by <strong>Tamim Hossain</strong>
-
-      <div class="socials">
-
-        <a href="https://wa.me/8801404114826"
-           target="_blank"
-           aria-label="WhatsApp">
-          💬
-        </a>
-
-        <a href="https://www.facebook.com/share/1PLmzu4aCA/"
-           target="_blank"
-           aria-label="Facebook">
-          🔵
-        </a>
-
-        <a href="https://www.instagram.com/jahirul_tamim"
-           target="_blank"
-           aria-label="Instagram">
-          📸
-        </a>
-
-      </div>
-    </div>
-
-  </div>
-</section>
-
-
-<!-- ================= APP ================= -->
-
-<section id="app" class="hidden">
-
-  <header class="topbar">
-    <div class="topbar-inner">
-
-      <div class="mini-brand">
-        <div class="mini-logo">৳</div>
-        <div>
-          <strong>Amar Hisab</strong>
-          <small id="welcomeText">Welcome</small>
-        </div>
-      </div>
-
-      <button class="icon-btn" onclick="toggleTheme()">
-        🌓
-      </button>
-
-    </div>
-  </header>
-
-
-  <main class="container">
-
-    <!-- HOME -->
-
-    <section id="homePage" class="page active">
-
-      <div class="balance-card">
-
-        <div class="balance-label">
-          💰 হাতে আছে
-        </div>
-
-        <div class="balance">
-          <span> SAR </span>
-          <span id="balance">0.00</span>
-        </div>
-
-        <div class="balance-actions">
-
-          <button class="small-action"
-                  onclick="openAdd('income')">
-            + আয়
-          </button>
-
-          <button class="small-action"
-                  onclick="openAdd('expense')">
-            − খরচ
-          </button>
-
-          <button class="small-action"
-                  onclick="openAdd('remittance')">
-            🏠 পাঠানো
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <div class="stats">
-
-        <div class="stat">
-          <div class="stat-icon">💵</div>
-          <small>মোট আয়</small>
-          <strong class="green">
-            <span id="income">0</span> SAR
-          </strong>
-        </div>
-
-        <div class="stat">
-          <div class="stat-icon">🛒</div>
-          <small>মোট খরচ</small>
-          <strong class="red">
-            <span id="expense">0</span> SAR
-          </strong>
-        </div>
-
-        <div class="stat">
-          <div class="stat-icon">🏠</div>
-          <small>বাড়িতে</small>
-          <strong class="blue">
-            <span id="remittance">0</span> SAR
-          </strong>
-        </div>
-
-        <div class="stat">
-          <div class="stat-icon">💰</div>
-          <small>সঞ্চয়</small>
-          <strong class="yellow">
-            <span id="saving">0</span> SAR
-          </strong>
-        </div>
-
-      </div>
-
-
-      <div class="section-title">
-        <h2>📈 Money Flow</h2>
-        <button onclick="openPage('analyticsPage')">
-          বিস্তারিত →
-        </button>
-      </div>
-
-      <div class="card">
-        <div class="chart-wrap">
-          <canvas id="moneyChart"></canvas>
-        </div>
-      </div>
-
-
-      <div class="section-title">
-        <h2>🧠 Smart Insight</h2>
-      </div>
-
-      <div class="card">
-
-        <div class="insight">
-          <div class="insight-icon">💡</div>
-          <div>
-            <strong>আপনার হিসাব</strong>
-            <p id="insightText">
-              কিছু transaction যোগ করলে এখানে smart insight দেখা যাবে।
-            </p>
-          </div>
-        </div>
-
-      </div>
-
-
-      <div class="section-title">
-        <h2>🧾 Recent Transactions</h2>
-        <button onclick="openPage('analyticsPage')">
-          সব দেখুন
-        </button>
-      </div>
-
-      <div class="card" id="recentTransactions">
-        <p style="color:var(--muted);font-size:13px;">
-          এখনো কোনো হিসাব নেই।
-        </p>
-      </div>
-
-    </section>
-
-
-    <!-- ANALYTICS -->
-
-    <section id="analyticsPage" class="page">
-
-      <div class="section-title">
-        <h2>📊 Analytics</h2>
-      </div>
-
-      <div class="card">
-
-        <div class="chart-wrap">
-          <canvas id="expenseChart"></canvas>
-        </div>
-
-      </div>
-
-      <div class="section-title">
-        <h2>💰 Financial Summary</h2>
-      </div>
-
-      <div class="card">
-
-        <div class="setting-row">
-          <div>
-            <strong>Current Balance</strong>
-            <small>হাতে থাকা টাকা</small>
-          </div>
-          <strong id="analyticsBalance">0 SAR</strong>
-        </div>
-
-        <div class="setting-row">
-          <div>
-            <strong>Total Income</strong>
-            <small>সব আয়</small>
-          </div>
-          <strong class="green" id="analyticsIncome">0 SAR</strong>
-        </div>
-
-        <div class="setting-row">
-          <div>
-            <strong>Total Expense</strong>
-            <small>সব খরচ</small>
-          </div>
-          <strong class="red" id="analyticsExpense">0 SAR</strong>
-        </div>
-
-        <div class="setting-row">
-          <div>
-            <strong>Total Remittance</strong>
-            <small>বাড়িতে পাঠানো</small>
-          </div>
-          <strong class="blue" id="analyticsRemittance">0 SAR</strong>
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- MESS -->
-
-    <section id="messPage" class="page">
-
-      <div class="section-title">
-        <h2>👥 Mess Manager</h2>
-        <button onclick="addMember()">
-          + Member
-        </button>
-      </div>
-
-      <div class="card">
-
-        <p style="color:var(--muted);font-size:13px;margin-bottom:10px;">
-          আপনার মেসের সদস্যদের নাম আগে থেকে সেট করুন।
-        </p>
-
-        <div id="membersList"></div>
-
-      </div>
-
-      <div class="section-title">
-        <h2>🛒 Mess Summary</h2>
-      </div>
-
-      <div class="card">
-
-        <div class="setting-row">
-          <div>
-            <strong>Total Members</strong>
-          </div>
-          <strong id="memberCount">0</strong>
-        </div>
-
-        <div class="setting-row">
-          <div>
-            <strong>Per Member Share</strong>
-          </div>
-          <strong id="memberShare">0 SAR</strong>
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- MORE -->
-
-    <section id="morePage" class="page">
-
-      <div class="card developer">
-
-        <div class="dev-avatar">
-          👨‍💻
-        </div>
-
-        <h2>Tamim Hossain</h2>
-
-        <p>
-          Creator & Developer of Amar Hisab
-        </p>
-
-        <div class="socials">
-
-          <a href="https://wa.me/8801404114826"
-             target="_blank">
-            💬
-          </a>
-
-          <a href="https://www.facebook.com/share/1PLmzu4aCA/"
-             target="_blank">
-            🔵
-          </a>
-
-          <a href="https://www.instagram.com/jahirul_tamim"
-             target="_blank">
-            📸
-          </a>
-
-        </div>
-
-      </div>
-
-
-      <div class="section-title">
-        <h2>⚙️ Settings</h2>
-      </div>
-
-      <div class="card">
-
-        <div class="setting-row">
-          <div>
-            <strong>🌙 Theme</strong>
-            <small>Dark / Light mode</small>
-          </div>
-
-          <button class="icon-btn" onclick="toggleTheme()">
-            🌓
-          </button>
-        </div>
-
-
-        <div class="setting-row">
-          <div>
-            <strong>💾 Local Backup</strong>
-            <small>আপনার হিসাব JSON হিসেবে সংরক্ষণ করুন</small>
-          </div>
-
-          <button class="icon-btn" onclick="backupData()">
-            ⬇️
-          </button>
-        </div>
-
-
-        <div class="setting-row">
-          <div>
-            <strong>♻️ Restore</strong>
-            <small>আগের backup ফিরিয়ে আনুন</small>
-          </div>
-
-          <button class="icon-btn" onclick="document.getElementById('restoreFile').click()">
-            ⬆️
-          </button>
-
-          <input
-            id="restoreFile"
-            type="file"
-            accept=".json"
-            class="hidden"
-            onchange="restoreData(event)"
-          />
-
-        </div>
-
-
-        <div class="setting-row">
-          <div>
-            <strong>🚪 Logout</strong>
-            <small>এই device থেকে account বন্ধ করুন</small>
-          </div>
-
-          <button class="icon-btn" onclick="logout()">
-            ↪️
-          </button>
-        </div>
-
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <!-- BOTTOM NAV -->
-
-  <nav class="bottom-nav">
-
-    <button class="nav-btn active"
-            onclick="openPage('homePage', this)">
-      <span>⌂</span>
-      <span>Home</span>
-    </button>
-
-    <button class="nav-btn"
-            onclick="openPage('analyticsPage', this)">
-      <span>📊</span>
-      <span>Analytics</span>
-    </button>
-
-    <button class="add-nav"
-            onclick="openAdd()">
-      +
-    </button>
-
-    <button class="nav-btn"
-            onclick="openPage('messPage', this)">
-      <span>👥</span>
-      <span>Mess</span>
-    </button>
-
-    <button class="nav-btn"
-            onclick="openPage('morePage', this)">
-      <span>⚙️</span>
-      <span>More</span>
-    </button>
-
-  </nav>
-
-</section>
-
-
-<!-- ================= ADD MODAL ================= -->
-
-<div id="addModal" class="modal">
-
-  <div class="modal-box">
-
-    <div class="modal-head">
-      <h2>নতুন হিসাব</h2>
-      <button class="close" onclick="closeAdd()">✕</button>
-    </div>
-
-    <div class="type-grid">
-
-      <button class="type-btn selected"
-              data-type="income"
-              onclick="selectType(this)">
-        💵<br>আয়
-      </button>
-
-      <button class="type-btn"
-              data-type="expense"
-              onclick="selectType(this)">
-        🛒<br>খরচ
-      </button>
-
-      <button class="type-btn"
-              data-type="remittance"
-              onclick="selectType(this)">
-        🏠<br>পাঠানো
-      </button>
-
-    </div>
-
-
-    <div class="input">
-      <label>পরিমাণ (SAR)</label>
-      <input id="amount" type="number" inputmode="decimal" placeholder="0">
-    </div>
-
-    <div class="input">
-      <label>Category / কারণ</label>
-      <input id="category" placeholder="যেমন: খাবার, বেতন, বাজার">
-    </div>
-
-    <div class="input">
-      <label>তারিখ</label>
-      <input id="date" type="date">
-    </div>
-
-    <button class="primary-btn" onclick="saveTransaction()">
-      হিসাব Save করুন
-    </button>
-
-  </div>
+<!-- LOGIN -->
+<div id="auth" class="auth">
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<div class="authbox">
+<div class="logo">৳</div>
+<h1>Amar Hisab</h1>
+<p class="muted">আপনার টাকা, বাজার আর মেস — এক জায়গায়।</p>
+
+<div class="tabs">
+<button id="loginTab" class="active" onclick="authMode('login')">Login</button>
+<button id="signupTab" onclick="authMode('signup')">Sign Up</button>
+</div>
+
+<form id="loginForm">
+<div class="field">
+<label>Email</label>
+<input id="loginEmail" type="email" required>
+</div>
+
+<div class="field">
+<label>Password</label>
+<div class="password">
+<input id="loginPassword" type="password" required>
+<button type="button" onclick="showPassword('loginPassword',this)">◉</button>
+</div>
+</div>
+
+<button class="btn full">Login</button>
+
+<div style="margin-top:13px;text-align:center">
+<button type="button" class="link" onclick="forgotPassword()">Forgot password?</button>
+</div>
+</form>
+
+<form id="signupForm" class="hidden">
+<div class="field">
+<label>Your name</label>
+<input id="signupName" required>
+</div>
+
+<div class="field">
+<label>Email</label>
+<input id="signupEmail" type="email" required>
+</div>
+
+<div class="field">
+<label>Password</label>
+<div class="password">
+<input id="signupPassword" type="password" minlength="6" required>
+<button type="button" onclick="showPassword('signupPassword',this)">◉</button>
+</div>
+</div>
+
+<button class="btn green full">Create Account</button>
+</form>
+
+<div class="dev">
+Created & Designed by <b>Tamim Hossain</b>
+<div class="socials">
+<a href="https://wa.me/8801404114826" target="_blank">WhatsApp</a>
+<a href="https://www.facebook.com/share/1PLmzu4aCA/" target="_blank">Facebook</a>
+<a href="https://www.instagram.com/jahirul_tamim" target="_blank">Instagram</a>
+</div>
+</div>
+</div>
+</div>
+
+<!-- APP -->
+<div id="app" class="app hidden">
+
+<header class="top">
+<div class="topin">
+<div class="brand">
+<div class="brandicon">৳</div>
+<div>
+<strong>Amar Hisab</strong>
+<span id="hello">Smart Finance</span>
+</div>
+</div>
+
+<div style="display:flex;gap:7px">
+<button class="icon" onclick="location.reload()">↻</button>
+<button class="icon" onclick="logout()">↪</button>
+</div>
+</div>
+</header>
+
+<main>
+
+<!-- DASHBOARD -->
+<section id="dashboardPage">
+
+<div class="hero">
+
+<div class="card balance">
+<div class="label">হাতে কত টাকা আছে</div>
+<div id="balance" class="big">৳0</div>
+<div class="muted">Income − Expense − Remittance + Borrow − Lend</div>
+
+<div class="actions">
+<button class="btn" onclick="openTx('income')">＋ Income</button>
+<button class="btn secondary" onclick="openTx('expense')">− Expense</button>
+<button class="btn secondary" onclick="openTx('remittance')">⌂ বাড়িতে পাঠানো</button>
+</div>
+</div>
+
+<div class="card side">
+<div class="mini">
+<span class="muted">এই মাসের Income</span>
+<b id="monthIncome" class="income">৳0</b>
+</div>
+<div class="mini">
+<span class="muted">এই মাসের Expense</span>
+<b id="monthExpense" class="expense">৳0</b>
+</div>
+<div class="mini">
+<span class="muted">এই মাসের Remittance</span>
+<b id="monthRemit" class="remittance">৳0</b>
+</div>
+<div class="mini">
+<span class="muted">Savings rate</span>
+<b id="saveRate" class="success">0%</b>
+</div>
+</div>
 
 </div>
 
+<div class="quick">
+<button onclick="openTx('income')"><span>💵</span><b>Income</b></button>
+<button onclick="openTx('expense')"><span>🧾</span><b>Expense</b></button>
+<button onclick="openTx('remittance')"><span>🏠</span><b>Remittance</b></button>
+<button onclick="openTx('borrow')"><span>🤝</span><b>Borrow</b></button>
+<button onclick="openTx('lend')"><span>💸</span><b>Lend</b></button>
+</div>
+
+<div class="stats">
+<div class="card stat">
+<small>Total Income</small>
+<strong id="totalIncome" class="income">৳0</strong>
+</div>
+<div class="card stat">
+<small>Total Expense</small>
+<strong id="totalExpense" class="expense">৳0</strong>
+</div>
+<div class="card stat">
+<small>Total Remittance</small>
+<strong id="totalRemit" class="remittance">৳0</strong>
+</div>
+<div class="card stat">
+<small>Total Bazar</small>
+<strong id="totalBazar">৳0</strong>
+</div>
+</div>
+
+<div class="grid">
+
+<div class="card box">
+<div class="head">
+<h3>Income vs Expense</h3>
+<span class="muted">Monthly</span>
+</div>
+<div class="chart"><canvas id="cashChart"></canvas></div>
+</div>
+
+<div class="card box">
+<div class="head">
+<h3>Expense Category</h3>
+<span class="muted">All</span>
+</div>
+<div class="chart"><canvas id="categoryChart"></canvas></div>
+</div>
+
+</div>
+
+<div class="card box section">
+<div class="head">
+<h3>Recent Activity</h3>
+<button class="btn secondary" onclick="go('history')">View All</button>
+</div>
+<div id="recent" class="list"></div>
+</div>
+
+</section>
+
+<!-- MESS -->
+<section id="messPage" class="hidden">
+
+<h2 class="sectiontitle">Smart Mess & Bazar</h2>
+
+<div class="card box">
+<div class="head">
+<h3>Mess Overview</h3>
+<button class="btn" onclick="openBazar()">＋ বাজার যোগ</button>
+</div>
+
+<div class="messstats">
+<div class="messpill">
+<span class="muted">Members</span>
+<b id="memberCount">0</b>
+</div>
+<div class="messpill">
+<span class="muted">Total Bazar</span>
+<b id="bazarTotal">৳0</b>
+</div>
+<div class="messpill">
+<span class="muted">আমার ভাগ</span>
+<b id="myShare">৳0</b>
+</div>
+</div>
+</div>
+
+<div class="card box section">
+<div class="head">
+<h3>Members</h3>
+<button class="btn secondary" onclick="openMember()">＋ Member</button>
+</div>
+<div id="members" class="members"></div>
+</div>
+
+<div class="card box section">
+<div class="head">
+<h3>কে কার কাছে পাবে / দেবে</h3>
+<button class="btn secondary" onclick="openSettlement()">Settlement</button>
+</div>
+<div id="debts" class="list"></div>
+</div>
+
+<div class="card box section">
+<div class="head">
+<h3>বাজারের ইতিহাস</h3>
+</div>
+<div id="bazars" class="list"></div>
+</div>
 
-<div id="toast"></div>
+</section>
 
+<!-- HISTORY -->
+<section id="historyPage" class="hidden">
 
-<script>
+<h2 class="sectiontitle">Transaction History</h2>
+
+<div class="card box">
+<div class="toolbar">
+<select id="filterType" onchange="renderHistory()">
+<option value="all">All</option>
+<option value="income">Income</option>
+<option value="expense">Expense</option>
+<option value="remittance">Remittance</option>
+<option value="borrow">Borrow</option>
+<option value="lend">Lend</option>
+</select>
 
-  /* =========================================================
-     LOCAL USER SYSTEM
-     NOTE:
-     This is a demo/local authentication layer.
-     For real secure multi-user cloud authentication,
-     connect Firebase Authentication + Firestore.
-     ========================================================= */
+<input id="filterMonth" type="month" onchange="renderHistory()">
 
-  const APP_KEY = "amarHisabPremiumV2";
+<input id="search" placeholder="Search..." oninput="renderHistory()">
+</div>
+
+<div id="history" class="list"></div>
+</div>
+
+</section>
+
+<!-- INSIGHTS -->
+<section id="insightsPage" class="hidden">
+
+<h2 class="sectiontitle">Smart Insights</h2>
+
+<div class="stats">
+
+<div class="card stat">
+<small>Savings Rate</small>
+<strong id="insightRate" class="success">0%</strong>
+</div>
+
+<div class="card stat">
+<small>Avg Expense</small>
+<strong id="avgExpense">৳0</strong>
+</div>
+
+<div class="card stat">
+<small>Top Category</small>
+<strong id="topCategory">—</strong>
+</div>
+
+<div class="card stat">
+<small>Remittance Share</small>
+<strong id="remitShare">0%</strong>
+</div>
+
+</div>
+
+<div class="grid">
+
+<div class="card box">
+<div class="head">
+<h3>Savings Trend</h3>
+</div>
+<div class="chart"><canvas id="trendChart"></canvas></div>
+</div>
+
+<div class="card box">
+<h3>Smart Note</h3>
+<p id="smartNote" class="muted" style="line-height:1.7">
+আপনার data জমলে এখানে smart insight দেখাবে।
+</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- MORE -->
+<section id="morePage" class="hidden">
+
+<h2 class="sectiontitle">More</h2>
+
+<div class="card box">
+<h3>Account</h3>
+<p id="account" class="muted"></p>
+
+<button class="btn secondary" onclick="generatePDF()">
+📄 Generate 5-page PDF
+</button>
+
+<button class="btn danger" style="margin-left:5px" onclick="logout()">
+Logout
+</button>
+</div>
+
+<div class="card box section">
+<h3>Creator & Developer</h3>
+<p>Created & Designed by <b>Tamim Hossain</b></p>
+<p class="muted">Made with ❤️ by Tamim Hossain</p>
+
+<div class="socials" style="justify-content:flex-start">
+<a href="https://wa.me/8801404114826" target="_blank">WhatsApp</a>
+<a href="https://www.facebook.com/share/1PLmzu4aCA/" target="_blank">Facebook</a>
+<a href="https://www.instagram.com/jahirul_tamim" target="_blank">Instagram</a>
+</div>
+</div>
+
+<div class="credit">
+Amar Hisab — Created & Designed by Tamim Hossain ❤️
+</div>
+
+</section>
+
+</main>
+
+<nav class="nav">
+<div class="navin">
+<button id="navDashboard" class="active" onclick="go('dashboard')">
+<i>⌂</i>Home
+</button>
+<button id="navMess" onclick="go('mess')">
+<i>🛒</i>Mess
+</button>
+<button id="navHistory" onclick="go('history')">
+<i>▤</i>History
+</button>
+<button id="navInsights" onclick="go('insights')">
+<i>◔</i>Insights
+</button>
+<button id="navMore" onclick="go('more')">
+<i>⋯</i>More
+</button>
+</div>
+</nav>
+
+</div>
+
+<!-- TRANSACTION MODAL -->
+<div id="txModal" class="modal">
+<div class="sheet">
+
+<div class="sheethead">
+<h2 id="txTitle">Add Transaction</h2>
+<button class="close" onclick="closeModal('txModal')">×</button>
+</div>
+
+<form id="txForm">
+
+<input type="hidden" id="txType">
+
+<div class="two">
+
+<div class="field">
+<label>Amount</label>
+<input id="txAmount" type="number" min="0.01" step="0.01" required>
+</div>
+
+<div class="field">
+<label>Date</label>
+<input id="txDate" type="date" required>
+</div>
+
+</div>
+
+<div class="field">
+<label>Category</label>
+<select id="txCategory">
+<option>Salary</option>
+<option>Food</option>
+<option>Transport</option>
+<option>Shopping</option>
+<option>Bills</option>
+<option>Rent</option>
+<option>Education</option>
+<option>Health</option>
+<option>Family</option>
+<option>Entertainment</option>
+<option>Other</option>
+</select>
+</div>
+
+<div class="field">
+<label>Note</label>
+<textarea id="txNote" rows="2"></textarea>
+</div>
+
+<button class="btn full">Save</button>
+
+</form>
+</div>
+</div>
+
+<!-- MEMBER MODAL -->
+<div id="memberModal" class="modal">
+<div class="sheet">
+
+<div class="sheethead">
+<h2>Add Member</h2>
+<button class="close" onclick="closeModal('memberModal')">×</button>
+</div>
+
+<form id="memberForm">
+
+<div class="field">
+<label>Member Name</label>
+<input id="memberName" required>
+</div>
 
-  let currentType = "income";
-  let moneyChart = null;
-  let expenseChart = null;
+<button class="btn full">Save Member</button>
 
-  let data = {
-    user: null,
-    transactions: [],
-    members: [],
-    theme: "dark"
-  };
+</form>
+</div>
+</div>
 
+<!-- BAZAR MODAL -->
+<div id="bazarModal" class="modal">
+<div class="sheet">
 
-  /* ================= UTILITIES ================= */
+<div class="sheethead">
+<h2>Smart Bazar</h2>
+<button class="close" onclick="closeModal('bazarModal')">×</button>
+</div>
+
+<form id="bazarForm">
+
+<div class="two">
+
+<div class="field">
+<label>Amount</label>
+<input id="bazarAmount" type="number" min="0.01" step="0.01" required>
+</div>
+
+<div class="field">
+<label>Date</label>
+<input id="bazarDate" type="date" required>
+</div>
+
+</div>
+
+<div class="two">
+
+<div class="field">
+<label>কে বাজার করেছে?</label>
+<select id="bazarBuyer"></select>
+</div>
+
+<div class="field">
+<label>কে টাকা দিয়েছে?</label>
+<select id="bazarPayer"></select>
+</div>
+
+</div>
+
+<div class="field">
+<label>কী কী কেনা হয়েছে?</label>
+<input id="bazarItems" placeholder="চাল, ডাল, তেল...">
+</div>
+
+<button class="btn green full">Save Bazar</button>
+
+</form>
+</div>
+</div>
+
+<!-- SETTLEMENT -->
+<div id="settleModal" class="modal">
+<div class="sheet">
+
+<div class="sheethead">
+<h2>Settlement</h2>
+<button class="close" onclick="closeModal('settleModal')">×</button>
+</div>
+
+<form id="settleForm">
+
+<div class="two">
+
+<div class="field">
+<label>যে দিয়েছে</label>
+<select id="settleFrom"></select>
+</div>
+
+<div class="field">
+<label>যে পেয়েছে</label>
+<select id="settleTo"></select>
+</div>
+
+</div>
+
+<div class="field">
+<label>Amount</label>
+<input id="settleAmount" type="number" min="0.01" step="0.01" required>
+</div>
+
+<button class="btn full">Save Settlement</button>
+
+</form>
+
+</div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script type="module">
+
+/* =========================================================
+   FIREBASE
+========================================================= */
+
+import {
+initializeApp
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+
+import {
+getAuth,
+createUserWithEmailAndPassword,
+signInWithEmailAndPassword,
+sendPasswordResetEmail,
+updateProfile,
+onAuthStateChanged,
+signOut,
+setPersistence,
+browserLocalPersistence
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+import {
+getFirestore,
+doc,
+setDoc,
+getDoc,
+collection,
+addDoc,
+getDocs,
+deleteDoc,
+query,
+orderBy,
+serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
+
+const firebaseConfig={
+apiKey:"AIzaSyDN_ga3uIEw52naGv9fXGcIPRfZQVIAeQQ",
+authDomain:"amarhisab-61931.firebaseapp.com",
+projectId:"amarhisab-61931",
+storageBucket:"amarhisab-61931.firebasestorage.app",
+messagingSenderId:"123707523972",
+appId:"1:123707523972:web:7bcc7657ebea301a87d3d1",
+measurementId:"G-YZZ6TSEMG8"
+};
+
+let app,auth,db;
+
+try{
+
+app=initializeApp(firebaseConfig);
+auth=getAuth(app);
+db=getFirestore(app);
+
+setPersistence(auth,browserLocalPersistence).catch(()=>{});
+
+}catch(error){
+
+document.body.innerHTML=`
+<div style="
+min-height:100vh;background:#07111f;color:white;
+display:grid;place-items:center;padding:25px;
+font-family:system-ui">
+<div style="
+max-width:600px;background:#10243b;
+padding:25px;border-radius:20px">
+<h2>Firebase Config Error</h2>
+<p style="color:#9db0c8">
+Firebase initialize হতে পারেনি।
+</p>
+<pre style="
+white-space:pre-wrap;background:#07111f;
+padding:15px;border-radius:12px;color:#ff8fa3">${error.message}</pre>
+</div>
+</div>`;
+throw error;
+}
+
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+let uid=null;
+let profile={};
+let transactions=[];
+let members=[];
+let bazars=[];
+let settlements=[];
+let charts={};
+
+const $=id=>document.getElementById(id);
+
+const money=n=>{
+return "৳"+Number(n||0).toLocaleString("en-IN",{
+maximumFractionDigits:2
+});
+};
+
+const today=()=>{
+return new Date().toISOString().slice(0,10);
+};
 
-  function money(n) {
-    return Number(n || 0).toLocaleString("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
-  }
+const monthNow=()=>{
+return today().slice(0,7);
+};
 
+const monthOf=d=>(d||"").slice(0,7);
 
-  function saveData() {
-    localStorage.setItem(APP_KEY, JSON.stringify(data));
-  }
+const esc=s=>{
+return String(s??"").replace(/[&<>"']/g,m=>({
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#039;"
+}[m]));
+};
 
+const dateText=d=>{
+if(!d)return "";
+return new Date(d+"T00:00:00").toLocaleDateString(
+"en-GB",
+{day:"2-digit",month:"short",year:"numeric"}
+);
+};
+
+function toast(message){
+
+$("toast").textContent=message;
+$("toast").classList.add("show");
 
-  function loadData() {
+setTimeout(()=>{
+$("toast").classList.remove("show");
+},2500);
 
-    const saved = localStorage.getItem(APP_KEY);
+}
 
-    if (saved) {
 
-      try {
-        data = JSON.parse(saved);
-      }
+/* =========================================================
+   AUTH UI
+========================================================= */
 
-      catch {
-        console.log("Data load error");
-      }
+window.authMode=mode=>{
 
-    }
+$("loginForm").classList.toggle("hidden",mode!=="login");
+$("signupForm").classList.toggle("hidden",mode!=="signup");
 
-  }
+$("loginTab").classList.toggle("active",mode==="login");
+$("signupTab").classList.toggle("active",mode==="signup");
 
+};
 
-  function toast(message) {
+window.showPassword=(id,btn)=>{
 
-    const el = document.getElementById("toast");
+const input=$(id);
 
-    el.textContent = message;
-    el.classList.add("show");
+if(input.type==="password"){
+input.type="text";
+btn.textContent="○";
+}else{
+input.type="password";
+btn.textContent="◉";
+}
 
-    setTimeout(() => {
-      el.classList.remove("show");
-    }, 2500);
+};
 
-  }
 
+/* =========================================================
+   LOGIN
+========================================================= */
 
-  /* ================= AUTH ================= */
+$("loginForm").addEventListener("submit",async e=>{
 
-  function showAuth(type) {
+e.preventDefault();
 
-    const login = type === "login";
+try{
 
-    document.getElementById("loginForm")
-      .classList.toggle("hidden", !login);
+await signInWithEmailAndPassword(
+auth,
+$("loginEmail").value.trim(),
+$("loginPassword").value
+);
 
-    document.getElementById("registerForm")
-      .classList.toggle("hidden", login);
+toast("Login successful");
 
-    document.getElementById("loginTab")
-      .classList.toggle("active", login);
+}catch(error){
 
-    document.getElementById("registerTab")
-      .classList.toggle("active", !login);
+showFirebaseError(error);
 
-  }
+}
 
+});
 
-  function register() {
 
-    const name = document.getElementById("regName").value.trim();
-    const email = document.getElementById("regEmail").value.trim();
-    const password = document.getElementById("regPassword").value;
+/* =========================================================
+   SIGN UP
+========================================================= */
 
-    if (!name || !email || password.length < 6) {
-      toast("সঠিক তথ্য দিন। Password কমপক্ষে ৬ অক্ষরের হতে হবে।");
-      return;
-    }
+$("signupForm").addEventListener("submit",async e=>{
 
-    /*
-      Demo/local account.
+e.preventDefault();
 
-      IMPORTANT:
-      Production version should use Firebase Authentication.
-    */
+try{
 
-    const account = {
-      name,
-      email,
-      password
-    };
+const name=$("signupName").value.trim();
+const email=$("signupEmail").value.trim();
+const password=$("signupPassword").value;
 
-    localStorage.setItem(
-      "amarHisabAccount_" + email,
-      JSON.stringify(account)
-    );
+const credential=
+await createUserWithEmailAndPassword(
+auth,email,password
+);
 
-    data.user = {
-      name,
-      email
-    };
+await updateProfile(
+credential.user,
+{displayName:name}
+);
 
-    saveData();
+await setDoc(
+doc(db,"users",credential.user.uid),
+{
+name:name,
+email:email,
+createdAt:serverTimestamp(),
+currency:"BDT"
+}
+);
 
-    toast("Account তৈরি হয়েছে 🎉");
+toast("Account created successfully");
 
-    showApp();
+}catch(error){
 
-  }
+showFirebaseError(error);
 
+}
 
-  function login() {
+});
 
-    const email = document.getElementById("loginEmail").value.trim();
-    const password = document.getElementById("loginPassword").value;
 
-    const saved = localStorage.getItem(
-      "amarHisabAccount_" + email
-    );
+window.forgotPassword=async()=>{
 
-    if (!saved) {
-      toast("Account পাওয়া যায়নি। আগে Create Account করুন।");
-      return;
-    }
+const email=$("loginEmail").value.trim();
 
-    const account = JSON.parse(saved);
+if(!email){
+toast("আগে Email লিখুন");
+return;
+}
 
-    if (account.password !== password) {
-      toast("Password ভুল।");
-      return;
-    }
+try{
 
-    data.user = {
-      name: account.name,
-      email: account.email
-    };
+await sendPasswordResetEmail(auth,email);
 
-    saveData();
+toast("Password reset email পাঠানো হয়েছে");
 
-    toast("Welcome back 👋");
+}catch(error){
 
-    showApp();
+showFirebaseError(error);
 
-  }
+}
 
+};
 
-  function logout() {
 
-    if (!confirm("Logout করতে চান?")) return;
+function showFirebaseError(error){
 
-    data.user = null;
+console.error(error);
 
-    saveData();
+const map={
 
-    document.getElementById("app")
-      .classList.add("hidden");
+"auth/invalid-credential":
+"Email অথবা Password ভুল।",
 
-    document.getElementById("authScreen")
-      .classList.remove("hidden");
+"auth/email-already-in-use":
+"এই Email দিয়ে আগে থেকেই account আছে।",
 
-    toast("Logged out");
+"auth/weak-password":
+"Password কমপক্ষে 6 characters হতে হবে।",
 
-  }
+"auth/invalid-email":
+"Email address ঠিক নয়।",
 
+"auth/operation-not-allowed":
+"Firebase Console → Authentication → Sign-in method → Email/Password Enable করুন।",
 
-  function showApp() {
+"auth/unauthorized-domain":
+"Firebase Authentication → Settings → Authorized domains-এ আপনার GitHub Pages domain যোগ করুন।",
 
-    document.getElementById("authScreen")
-      .classList.add("hidden");
+"auth/network-request-failed":
+"Internet connection check করুন।"
 
-    document.getElementById("app")
-      .classList.remove("hidden");
+};
 
-    document.getElementById("welcomeText")
-      .textContent = "Hi, " + (data.user?.name || "Friend");
+toast(map[error.code]||error.message||"Firebase error");
 
-    applyTheme();
+}
 
-    render();
 
-  }
+/* =========================================================
+   AUTH STATE
+========================================================= */
 
+onAuthStateChanged(auth,async user=>{
 
-  /* ================= NAVIGATION ================= */
+if(!user){
 
-  function openPage(id, button) {
+uid=null;
 
-    document.querySelectorAll(".page")
-      .forEach(page => page.classList.remove("active"));
+$("auth").classList.remove("hidden");
+$("app").classList.add("hidden");
 
-    document.getElementById(id)
-      .classList.add("active");
+return;
 
-    document.querySelectorAll(".nav-btn")
-      .forEach(btn => btn.classList.remove("active"));
+}
 
-    if (button) {
-      button.classList.add("active");
-    }
-    else {
+uid=user.uid;
 
-      const map = {
-        homePage: 0,
-        analyticsPage: 1,
-        messPage: 2,
-        morePage: 3
-      };
+$("auth").classList.add("hidden");
+$("app").classList.remove("hidden");
 
-      const index = map[id];
+$("hello").textContent=
+user.displayName||user.email||"My Account";
 
-      if (index !== undefined) {
+$("account").textContent=
+(user.displayName||"")+" • "+user.email;
 
-        const buttons =
-          document.querySelectorAll(".nav-btn");
+await loadAll();
+renderAll();
 
-        buttons[index]?.classList.add("active");
+});
 
-      }
 
-    }
+window.logout=()=>{
+signOut(auth);
+};
 
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
 
-  }
+/* =========================================================
+   FIRESTORE
+========================================================= */
 
+async function loadAll(){
 
-  /* ================= TRANSACTIONS ================= */
+const userDoc=
+await getDoc(doc(db,"users",uid));
 
-  function openAdd(type = "income") {
+profile=userDoc.data()||{};
 
-    currentType = type;
+transactions=await readCollection("transactions");
+members=await readCollection("members");
+bazars=await readCollection("bazars");
+settlements=await readCollection("settlements");
 
-    document.getElementById("addModal")
-      .classList.add("show");
+}
 
-    document.querySelectorAll(".type-btn")
-      .forEach(btn => {
+async function readCollection(name){
 
-        btn.classList.toggle(
-          "selected",
-          btn.dataset.type === type
-        );
+const q=query(
+collection(db,"users",uid,name),
+orderBy("createdAt","desc")
+);
 
-      });
+const snap=await getDocs(q);
 
-    document.getElementById("date").value =
-      new Date().toISOString().slice(0,10);
+return snap.docs.map(d=>({
+id:d.id,
+...d.data()
+}));
 
-  }
+}
 
+async function addData(name,data){
 
-  function closeAdd() {
+await addDoc(
+collection(db,"users",uid,name),
+{
+...data,
+createdAt:serverTimestamp()
+}
+);
 
-    document.getElementById("addModal")
-      .classList.remove("show");
+await loadAll();
+renderAll();
 
-  }
+}
 
+async function removeData(name,id){
 
-  function selectType(btn) {
+await deleteDoc(
+doc(db,"users",uid,name,id)
+);
 
-    currentType = btn.dataset.type;
+await loadAll();
+renderAll();
 
-    document.querySelectorAll(".type-btn")
-      .forEach(b => b.classList.remove("selected"));
+}
 
-    btn.classList.add("selected");
 
-  }
+/* =========================================================
+   NAVIGATION
+========================================================= */
 
+window.go=page=>{
 
-  function saveTransaction() {
+const pages=[
+"dashboard",
+"mess",
+"history",
+"insights",
+"more"
+];
 
-    const amount =
-      Number(document.getElementById("amount").value);
+pages.forEach(p=>{
 
-    const category =
-      document.getElementById("category").value.trim() ||
-      "Other";
+$(p+"Page").classList.toggle(
+"hidden",
+p!==page
+);
 
-    const date =
-      document.getElementById("date").value ||
-      new Date().toISOString().slice(0,10);
+});
 
-    if (!amount || amount <= 0) {
-      toast("সঠিক amount দিন");
-      return;
-    }
+$("navDashboard").classList.toggle(
+"active",page==="dashboard"
+);
 
-    data.transactions.push({
-      id: Date.now(),
-      type: currentType,
-      amount,
-      category,
-      date
-    });
+$("navMess").classList.toggle(
+"active",page==="mess"
+);
 
-    saveData();
+$("navHistory").classList.toggle(
+"active",page==="history"
+);
 
-    document.getElementById("amount").value = "";
-    document.getElementById("category").value = "";
+$("navInsights").classList.toggle(
+"active",page==="insights"
+);
 
-    closeAdd();
+$("navMore").classList.toggle(
+"active",page==="more"
+);
 
-    toast("হিসাব যোগ হয়েছে ✓");
+if(page==="mess")renderMess();
+if(page==="history")renderHistory();
+if(page==="insights")renderInsights();
 
-    render();
+};
 
-  }
 
+/* =========================================================
+   TOTALS
+========================================================= */
 
-  /* ================= CALCULATIONS ================= */
+function totals(){
 
-  function totals() {
+const t={
+income:0,
+expense:0,
+remittance:0,
+borrow:0,
+lend:0
+};
 
-    let income = 0;
-    let expense = 0;
-    let remittance = 0;
+transactions.forEach(x=>{
 
-    data.transactions.forEach(t => {
+if(t[x.type]!==undefined){
+t[x.type]+=Number(x.amount||0);
+}
 
-      if (t.type === "income")
-        income += Number(t.amount);
+});
 
-      if (t.type === "expense")
-        expense += Number(t.amount);
+return t;
 
-      if (t.type === "remittance")
-        remittance += Number(t.amount);
+}
 
-    });
+function balance(){
 
-    const balance =
-      income - expense - remittance;
+const t=totals();
 
-    const saving =
-      Math.max(balance, 0);
+return (
+t.income+
+t.borrow-
+t.expense-
+t.remittance-
+t.lend
+);
 
-    return {
-      income,
-      expense,
-      remittance,
-      balance,
-      saving
-    };
+}
 
-  }
+function monthlyTotals(){
 
+const m=monthNow();
 
-  /* ================= RENDER ================= */
+const t={
+income:0,
+expense:0,
+remittance:0,
+borrow:0,
+lend:0
+};
 
-  function render() {
+transactions
+.filter(x=>monthOf(x.date)===m)
+.forEach(x=>{
 
-    const t = totals();
+if(t[x.type]!==undefined){
+t[x.type]+=Number(x.amount||0);
+}
 
-    document.getElementById("balance").textContent =
-      money(t.balance);
+});
 
-    document.getElementById("income").textContent =
-      money(t.income);
+return t;
 
-    document.getElementById("expense").textContent =
-      money(t.expense);
+}
 
-    document.getElementById("remittance").textContent =
-      money(t.remittance);
 
-    document.getElementById("saving").textContent =
-      money(t.saving);
+/* =========================================================
+   DASHBOARD
+========================================================= */
 
-    document.getElementById("analyticsBalance").textContent =
-      money(t.balance) + " SAR";
+function renderDashboard(){
 
-    document.getElementById("analyticsIncome").textContent =
-      money(t.income) + " SAR";
+const t=totals();
+const m=monthlyTotals();
 
-    document.getElementById("analyticsExpense").textContent =
-      money(t.expense) + " SAR";
+$("balance").textContent=money(balance());
 
-    document.getElementById("analyticsRemittance").textContent =
-      money(t.remittance) + " SAR";
+$("monthIncome").textContent=money(m.income);
+$("monthExpense").textContent=money(m.expense);
+$("monthRemit").textContent=money(m.remittance);
 
-    renderTransactions();
+const rate=m.income?
+((m.income-m.expense-m.remittance)/m.income)*100:0;
 
-    renderCharts();
+$("saveRate").textContent=Math.round(rate)+"%";
 
-    renderMembers();
+$("totalIncome").textContent=money(t.income);
+$("totalExpense").textContent=money(t.expense);
+$("totalRemit").textContent=money(t.remittance);
 
-    updateInsight();
+const bazarSum=
+bazars.reduce((s,x)=>s+Number(x.amount||0),0);
 
-  }
+$("totalBazar").textContent=money(bazarSum);
 
+const recent=
+[...transactions]
+.sort((a,b)=>(b.date||"").localeCompare(a.date||""))
+.slice(0,7);
 
-  function renderTransactions() {
+$("recent").innerHTML=recent.length?
+recent.map(transactionHTML).join(""):
+`<div class="empty">
+এখনও কোনো transaction নেই।<br>
+Quick Add দিয়ে শুরু করুন।
+</div>`;
 
-    const box =
-      document.getElementById("recentTransactions");
+renderCharts();
 
-    if (!data.transactions.length) {
+}
 
-      box.innerHTML =
-        `<p style="color:var(--muted);font-size:13px;">
-          এখনো কোনো হিসাব নেই।
-        </p>`;
+function transactionHTML(t){
 
-      return;
+const icons={
+income:"💵",
+expense:"🧾",
+remittance:"🏠",
+borrow:"🤝",
+lend:"💸"
+};
 
-    }
+const sign=
+t.type==="income"||t.type==="borrow"?"+":"−";
 
-    const recent =
-      [...data.transactions]
-      .reverse()
-      .slice(0, 8);
+return `
+<div class="row">
+<div class="left">
+<div class="avatar">${icons[t.type]||"•"}</div>
+<div>
+<div class="title">${esc(t.category||t.type)}</div>
+<div class="sub">
+${dateText(t.date)}
+${t.note?" • "+esc(t.note):""}
+</div>
+</div>
+</div>
 
-    box.innerHTML = recent.map(t => {
+<div class="amount ${t.type}">
+${sign}${money(t.amount)}
+</div>
+</div>
+`;
 
-      const income = t.type === "income";
+}
 
-      const remittance =
-        t.type === "remittance";
 
-      const sign = income ? "+" : "−";
+/* =========================================================
+   TRANSACTION MODAL
+========================================================= */
 
-      const icon =
-        income ? "💵" :
-        remittance ? "🏠" :
-        "🛒";
+window.openTx=type=>{
 
-      const cls =
-        income ? "green" :
-        remittance ? "blue" :
-        "red";
+$("txType").value=type;
 
-      return `
+const names={
+income:"Add Income",
+expense:"Add Expense",
+remittance:"বাড়িতে টাকা পাঠানো",
+borrow:"Borrow Money",
+lend:"Lend Money"
+};
 
-        <div class="transaction">
+$("txTitle").textContent=names[type];
 
-          <div class="tx-icon">
-            ${icon}
-          </div>
+$("txAmount").value="";
+$("txDate").value=today();
+$("txNote").value="";
 
-          <div class="tx-info">
-            <strong>${escapeHTML(t.category)}</strong>
-            <small>${t.date}</small>
-          </div>
+openModal("txModal");
 
-          <div class="tx-amount ${cls}">
-            ${sign}${money(t.amount)} SAR
-          </div>
+};
 
-        </div>
+$("txForm").addEventListener("submit",async e=>{
 
-      `;
+e.preventDefault();
 
-    }).join("");
+try{
 
-  }
+await addData(
+"transactions",
+{
+type:$("txType").value,
+amount:Number($("txAmount").value),
+date:$("txDate").value,
+category:$("txCategory").value,
+note:$("txNote").value.trim()
+}
+);
 
+closeModal("txModal");
 
-  function escapeHTML(value) {
+toast("Transaction saved");
 
-    return String(value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
+}catch(error){
 
-  }
+toast(error.message);
 
+}
 
-  /* ================= CHARTS ================= */
+});
 
-  function renderCharts() {
 
-    if (typeof Chart === "undefined") return;
+/* =========================================================
+   MESS MEMBERS
+========================================================= */
 
-    const t = totals();
+window.openMember=()=>{
 
-    const ctx =
-      document.getElementById("moneyChart");
+$("memberName").value="";
+openModal("memberModal");
 
-    if (moneyChart) {
-      moneyChart.destroy();
-    }
+};
 
-    moneyChart = new Chart(ctx, {
+$("memberForm").addEventListener("submit",async e=>{
 
-      type: "line",
+e.preventDefault();
 
-      data: {
+const name=$("memberName").value.trim();
 
-        labels: ["Income", "Expense", "Remittance", "Balance"],
+if(!name)return;
 
-        datasets: [{
-          label: "SAR",
-          data: [
-            t.income,
-            t.expense,
-            t.remittance,
-            Math.max(t.balance,0)
-          ],
-          borderWidth: 3,
-          tension: .4,
-          fill: true
-        }]
+await addData(
+"members",
+{name:name}
+);
 
-      },
+closeModal("memberModal");
 
-      options: {
+toast("Member added");
 
-        responsive: true,
-        maintainAspectRatio: false,
+});
 
-        plugins: {
-          legend: {
-            display: false
-          }
-        },
 
-        scales: {
-          y: {
-            beginAtZero: true,
-            grid: {
-              color: "rgba(148,163,184,.10)"
-            }
-          },
+function renderMess(){
 
-          x: {
-            grid: {
-              display: false
-            }
-          }
+$("memberCount").textContent=members.length;
 
-        }
+const total=
+bazars.reduce((s,x)=>s+Number(x.amount||0),0);
 
-      }
+$("bazarTotal").textContent=money(total);
 
-    });
+const share=bazars.reduce(
+(s,x)=>
+s+
+Number(x.amount||0)/
+Math.max(Number(x.memberCount||members.length||1),1),
+0
+);
 
+$("myShare").textContent=money(share);
 
-    const expenseCtx =
-      document.getElementById("expenseChart");
+$("members").innerHTML=members.length?
 
-    if (expenseChart) {
-      expenseChart.destroy();
-    }
+members.map(m=>`
+<div class="member">
+<span>👤 ${esc(m.name)}</span>
+<button class="icon"
+style="width:34px;height:34px"
+onclick="deleteMember('${m.id}')">
+×
+</button>
+</div>
+`).join(""):
 
-    const categories = {};
+`<div class="empty">
+Member যোগ করুন।
+</div>`;
 
-    data.transactions
-      .filter(t => t.type === "expense")
-      .forEach(t => {
+renderDebts();
 
-        categories[t.category] =
-          (categories[t.category] || 0) +
-          Number(t.amount);
+$("bazars").innerHTML=bazars.length?
 
-      });
+bazars.map(z=>`
+<div class="row">
 
-    const labels =
-      Object.keys(categories);
+<div class="left">
+<div class="avatar">🛒</div>
 
-    const values =
-      Object.values(categories);
+<div>
+<div class="title">
+${money(z.amount)} • ${esc(z.items||"Bazar")}
+</div>
 
-    expenseChart = new Chart(expenseCtx, {
+<div class="sub">
+${dateText(z.date)}
+• বাজার: ${esc(z.buyerName||"")}
+• টাকা: ${esc(z.payerName||"")}
+</div>
+</div>
+</div>
 
-      type: "doughnut",
+<button class="icon"
+style="width:34px;height:34px"
+onclick="deleteBazar('${z.id}')">
+×
+</button>
 
-      data: {
+</div>
+`).join(""):
 
-        labels: labels.length
-          ? labels
-          : ["No Expense"],
+`<div class="empty">কোনো Bazar entry নেই।</div>`;
 
-        datasets: [{
-          data: values.length
-            ? values
-            : [1],
-          borderWidth: 0
-        }]
+}
 
-      },
 
-      options: {
+window.deleteMember=async id=>{
 
-        responsive: true,
-        maintainAspectRatio: false,
+if(confirm("এই member delete করবেন?")){
+await removeData("members",id);
+toast("Member deleted");
+}
 
-        cutout: "68%",
+};
 
-        plugins: {
-          legend: {
-            position: "bottom"
-          }
-        }
+window.deleteBazar=async id=>{
 
-      }
+if(confirm("এই bazar entry delete করবেন?")){
+await removeData("bazars",id);
+toast("Bazar deleted");
+}
 
-    });
+};
 
-  }
 
+/* =========================================================
+   BAZAR
+========================================================= */
 
-  /* ================= INSIGHT ================= */
+window.openBazar=()=>{
 
-  function updateInsight() {
+if(members.length<1){
+toast("আগে অন্তত একজন member যোগ করুন");
+return;
+}
 
-    const t = totals();
+$("bazarDate").value=today();
+$("bazarAmount").value="";
+$("bazarItems").value="";
 
-    const el =
-      document.getElementById("insightText");
+const options=
+members.map(m=>
+`<option value="${m.id}">${esc(m.name)}</option>`
+).join("");
 
-    if (!data.transactions.length) {
+$("bazarBuyer").innerHTML=options;
+$("bazarPayer").innerHTML=options;
 
-      el.textContent =
-        "কিছু transaction যোগ করলে এখানে smart insight দেখা যাবে।";
+openModal("bazarModal");
 
-      return;
+};
 
-    }
 
-    if (t.balance < 0) {
+$("bazarForm").addEventListener("submit",async e=>{
 
-      el.textContent =
-        "আপনার খরচ আয়কে ছাড়িয়ে গেছে। খরচ একটু কমানোর চেষ্টা করুন।";
+e.preventDefault();
 
-    }
+const buyer=
+members.find(m=>m.id===$("bazarBuyer").value);
 
-    else if (t.income > 0 && t.expense / t.income > .7) {
+const payer=
+members.find(m=>m.id===$("bazarPayer").value);
 
-      el.textContent =
-        "আপনার আয়ের 70% এর বেশি খরচ হয়েছে। Savings-এর দিকে নজর দিন।";
+await addData(
+"bazars",
+{
+amount:Number($("bazarAmount").value),
+date:$("bazarDate").value,
+items:$("bazarItems").value.trim(),
+buyerId:buyer.id,
+buyerName:buyer.name,
+payerId:payer.id,
+payerName:payer.name,
+memberCount:members.length
+}
+);
 
-    }
+closeModal("bazarModal");
 
-    else {
+toast("Bazar saved");
 
-      const rate =
-        t.income
-          ? Math.round((t.balance / t.income) * 100)
-          : 0;
+});
 
-      el.textContent =
-        `আপনার বর্তমান savings rate প্রায় ${rate}%। ভালোভাবে হিসাব রাখুন।`;
 
-    }
+/* =========================================================
+   DEBTS
+========================================================= */
 
-  }
+function memberBalances(){
 
+const balances={};
 
-  /* ================= MEMBERS ================= */
+members.forEach(m=>{
+balances[m.id]={
+name:m.name,
+net:0
+};
+});
 
-  function addMember() {
+bazars.forEach(z=>{
 
-    const name =
-      prompt("সদস্যের নাম লিখুন:");
+const share=
+Number(z.amount||0)/
+Math.max(Number(z.memberCount||members.length||1),1);
 
-    if (!name?.trim()) return;
+if(balances[z.payerId]){
+balances[z.payerId].net+=Number(z.amount||0);
+}
 
-    data.members.push({
-      id: Date.now(),
-      name: name.trim()
-    });
+members.forEach(m=>{
+if(balances[m.id]){
+balances[m.id].net-=share;
+}
+});
 
-    saveData();
+});
 
-    renderMembers();
+settlements.forEach(s=>{
 
-    toast("সদস্য যোগ হয়েছে 👤");
+if(balances[s.fromId]){
+balances[s.fromId].net-=Number(s.amount||0);
+}
 
-  }
+if(balances[s.toId]){
+balances[s.toId].net+=Number(s.amount||0);
+}
 
+});
 
-  function renderMembers() {
+return Object.values(balances);
 
-    const list =
-      document.getElementById("membersList");
+}
 
-    document.getElementById("memberCount")
-      .textContent = data.members.length;
+function debtPairs(){
 
-    const expense =
-      totals().expense;
+const balances=memberBalances();
 
-    const share =
-      data.members.length
-        ? expense / data.members.length
-        : 0;
+const creditors=
+balances
+.filter(x=>x.net>.01)
+.map(x=>({...x}));
 
-    document.getElementById("memberShare")
-      .textContent = money(share) + " SAR";
+const debtors=
+balances
+.filter(x=>x.net<-.01)
+.map(x=>({...x,net:-x.net}));
 
-    if (!data.members.length) {
+const result=[];
 
-      list.innerHTML =
-        `<p style="color:var(--muted);font-size:13px;">
-          এখনো কোনো সদস্য যোগ করা হয়নি।
-        </p>`;
+for(const d of debtors){
 
-      return;
+for(const c of creditors){
 
-    }
+if(d.net<=.01)break;
 
-    list.innerHTML =
-      data.members.map(m => `
+const amount=Math.min(d.net,c.net);
 
-        <div class="member">
+if(amount>.01){
 
-          <div class="avatar">
-            ${escapeHTML(m.name.charAt(0).toUpperCase())}
-          </div>
+result.push({
+from:d.name,
+to:c.name,
+amount
+});
 
-          <div class="member-info">
-            <strong>${escapeHTML(m.name)}</strong>
-            <small>Share: ${money(share)} SAR</small>
-          </div>
+d.net-=amount;
+c.net-=amount;
 
-          <button
-            class="icon-btn"
-            onclick="removeMember(${m.id})">
-            🗑️
-          </button>
+}
 
-        </div>
+}
 
-      `).join("");
+}
 
-  }
+return result;
 
+}
 
-  function removeMember(id) {
+function renderDebts(){
 
-    if (!confirm("এই সদস্যকে remove করবেন?"))
-      return;
+const pairs=debtPairs();
 
-    data.members =
-      data.members.filter(m => m.id !== id);
+$("debts").innerHTML=pairs.length?
 
-    saveData();
+pairs.map(p=>`
+<div class="row">
+<div>
+💸 <b>${esc(p.from)}</b>
+owes
+<b>${esc(p.to)}</b>
+</div>
+<strong>${money(p.amount)}</strong>
+</div>
+`).join(""):
 
-    renderMembers();
+`<div class="empty">
+এখন কোনো outstanding settlement নেই।
+</div>`;
 
-  }
+}
 
 
-  /* ================= THEME ================= */
+/* =========================================================
+   SETTLEMENT
+========================================================= */
 
-  function toggleTheme() {
+window.openSettlement=()=>{
 
-    data.theme =
-      data.theme === "light"
-        ? "dark"
-        : "light";
+if(members.length<2){
+toast("কমপক্ষে 2 জন member দরকার");
+return;
+}
 
-    saveData();
+const options=
+members.map(m=>
+`<option value="${m.id}">${esc(m.name)}</option>`
+).join("");
 
-    applyTheme();
+$("settleFrom").innerHTML=options;
+$("settleTo").innerHTML=options;
+$("settleAmount").value="";
 
-  }
+openModal("settleModal");
 
+};
 
-  function applyTheme() {
+$("settleForm").addEventListener("submit",async e=>{
 
-    document.body.classList.toggle(
-      "light",
-      data.theme === "light"
-    );
+e.preventDefault();
 
-  }
+if($("settleFrom").value===
+$("settleTo").value){
 
+toast("একই member হতে পারবে না");
+return;
 
-  /* ================= BACKUP ================= */
+}
 
-  function backupData() {
+await addData(
+"settlements",
+{
+fromId:$("settleFrom").value,
+toId:$("settleTo").value,
+amount:Number($("settleAmount").value),
+date:today()
+}
+);
 
-    const blob =
-      new Blob(
-        [JSON.stringify(data, null, 2)],
-        { type: "application/json" }
-      );
+closeModal("settleModal");
 
-    const url =
-      URL.createObjectURL(blob);
+toast("Settlement saved");
 
-    const a =
-      document.createElement("a");
+});
 
-    a.href = url;
 
-    a.download =
-      "amar-hisab-backup-" +
-      new Date().toISOString().slice(0,10) +
-      ".json";
+/* =========================================================
+   HISTORY
+========================================================= */
 
-    a.click();
+window.renderHistory=()=>{
 
-    URL.revokeObjectURL(url);
+const type=$("filterType").value;
+const month=$("filterMonth").value;
+const search=
+$("search").value.toLowerCase();
 
-    toast("Backup download হয়েছে ✓");
+const arr=
+transactions
+.filter(x=>
+(type==="all"||x.type===type)&&
+(!month||monthOf(x.date)===month)&&
+(!search||JSON.stringify(x).toLowerCase().includes(search))
+)
+.sort((a,b)=>
+(b.date||"").localeCompare(a.date||"")
+);
 
-  }
+$("history").innerHTML=arr.length?
 
+arr.map(transactionHTML).join(""):
 
-  function restoreData(event) {
+`<div class="empty">কিছু পাওয়া যায়নি।</div>`;
 
-    const file =
-      event.target.files[0];
+};
 
-    if (!file) return;
 
-    const reader =
-      new FileReader();
+/* =========================================================
+   CHARTS
+========================================================= */
 
-    reader.onload = e => {
+function destroyChart(name){
 
-      try {
+if(charts[name]){
+charts[name].destroy();
+charts[name]=null;
+}
 
-        const restored =
-          JSON.parse(e.target.result);
+}
 
-        if (!restored.transactions ||
-            !restored.members) {
+function monthList(){
 
-          throw new Error("Invalid backup");
+const result=[];
 
-        }
+for(let i=5;i>=0;i--){
 
-        data = restored;
+const d=new Date();
+d.setMonth(d.getMonth()-i);
 
-        saveData();
+result.push(
+d.toISOString().slice(0,7)
+);
 
-        render();
+}
 
-        toast("Backup restore হয়েছে ✓");
+return result;
 
-      }
+}
 
-      catch {
+function sumMonth(type,month){
 
-        toast("Backup file সঠিক নয়।");
+return transactions
+.filter(x=>x.type===type&&monthOf(x.date)===month)
+.reduce((s,x)=>s+Number(x.amount||0),0);
 
-      }
+}
 
-    };
+function renderCharts(){
 
-    reader.readAsText(file);
+const labels=monthList();
 
-  }
+const incomes=
+labels.map(m=>sumMonth("income",m));
 
+const expenses=
+labels.map(m=>sumMonth("expense",m));
 
-  /* ================= PWA SERVICE WORKER ================= */
+destroyChart("cash");
 
-  /*
-    আপনার existing sw.js থাকলে সেটি ব্যবহার করতে পারবেন।
-    না থাকলে এই section registration চেষ্টা করবে।
-  */
+charts.cash=new Chart(
+$("cashChart"),
+{
+type:"line",
+data:{
+labels,
+datasets:[
+{
+label:"Income",
+data:incomes,
+tension:.35,
+borderWidth:2
+},
+{
+label:"Expense",
+data:expenses,
+tension:.35,
+borderWidth:2
+}
+]
+},
+options:{
+responsive:true,
+maintainAspectRatio:false,
+plugins:{
+legend:{
+labels:{color:"#d6e1ef"}
+}
+},
+scales:{
+x:{
+ticks:{color:"#91a5bd"}
+},
+y:{
+ticks:{color:"#91a5bd"}
+}
+}
+}
+}
+);
 
-  if ("serviceWorker" in navigator) {
+const categories={};
 
-    window.addEventListener("load", () => {
+transactions
+.filter(x=>x.type==="expense")
+.forEach(x=>{
+const c=x.category||"Other";
+categories[c]=
+(categories[c]||0)+Number(x.amount||0);
+});
 
-      navigator.serviceWorker
-        .register("./sw.js")
-        .catch(() => {
-          console.log("Service worker not found.");
-        });
+const keys=
+Object.keys(categories)
+.sort((a,b)=>categories[b]-categories[a])
+.slice(0,8);
 
-    });
+destroyChart("category");
 
-  }
+charts.category=new Chart(
+$("categoryChart"),
+{
+type:"doughnut",
+data:{
+labels:keys,
+datasets:[
+{
+data:keys.map(k=>categories[k])
+}
+]
+},
+options:{
+responsive:true,
+maintainAspectRatio:false,
+plugins:{
+legend:{
+position:"bottom",
+labels:{color:"#d6e1ef"}
+}
+}
+}
+}
+);
 
+}
 
-  /* ================= START ================= */
 
-  loadData();
+/* =========================================================
+   INSIGHTS
+========================================================= */
 
-  if (data.user) {
-    showApp();
-  }
+function renderInsights(){
 
-  else {
+const t=totals();
+const m=monthlyTotals();
 
-    document.getElementById("authScreen")
-      .classList.remove("hidden");
+const rate=m.income?
+((m.income-m.expense-m.remittance)/m.income)*100:0;
 
-    document.getElementById("app")
-      .classList.add("hidden");
+$("insightRate").textContent=
+Math.round(rate)+"%";
 
-  }
+const months=
+[...new Set(
+transactions
+.map(x=>monthOf(x.date))
+.filter(Boolean)
+)];
+
+const average=
+months.length?
+months.reduce(
+(s,m)=>s+sumMonth("expense",m),0
+)/months.length:0;
+
+$("avgExpense").textContent=money(average);
+
+const categories={};
+
+transactions
+.filter(x=>x.type==="expense")
+.forEach(x=>{
+const c=x.category||"Other";
+categories[c]=(categories[c]||0)+Number(x.amount||0);
+});
+
+const top=
+Object.entries(categories)
+.sort((a,b)=>b[1]-a[1])[0];
+
+$("topCategory").textContent=
+top?top[0]:"—";
+
+$("remitShare").textContent=
+t.income?
+Math.round((t.remittance||0)/t.income*100)+"%":
+"0%";
+
+if(rate>=30){
+
+$("smartNote").textContent=
+"চমৎকার! আপনার savings rate ভালো। এই habit ধরে রাখুন।";
+
+}else if(rate>=0){
+
+$("smartNote").textContent=
+"Savings বাড়াতে ছোট ছোট recurring expense review করুন।";
+
+}else{
+
+$("smartNote").textContent=
+"এই মাসে আপনার expense + remittance income-এর চেয়ে বেশি। Budget একটু tighten করা ভালো।";
+
+}
+
+const labels=monthList();
+
+const savings=
+labels.map(m=>
+sumMonth("income",m)-
+sumMonth("expense",m)-
+sumMonth("remittance",m)
+);
+
+const remittance=
+labels.map(m=>
+sumMonth("remittance",m)
+);
+
+destroyChart("trend");
+
+charts.trend=new Chart(
+$("trendChart"),
+{
+type:"bar",
+data:{
+labels,
+datasets:[
+{
+label:"Savings",
+data:savings
+},
+{
+label:"Remittance",
+data:remittance
+}
+]
+},
+options:{
+responsive:true,
+maintainAspectRatio:false,
+plugins:{
+legend:{
+labels:{color:"#d6e1ef"}
+}
+},
+scales:{
+x:{ticks:{color:"#91a5bd"}},
+y:{ticks:{color:"#91a5bd"}}
+}
+}
+}
+);
+
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+function openModal(id){
+$(id).classList.add("show");
+}
+
+window.closeModal=id=>{
+$(id).classList.remove("show");
+};
+
+document
+.querySelectorAll(".modal")
+.forEach(modal=>{
+
+modal.addEventListener("click",e=>{
+
+if(e.target===modal){
+modal.classList.remove("show");
+}
+
+});
+
+});
+
+
+/* =========================================================
+   PDF
+========================================================= */
+
+function pdfPage(
+doc,
+title,
+subtitle,
+rows
+){
+
+doc.setFillColor(7,17,31);
+doc.rect(0,0,210,297,"F");
+
+doc.setTextColor(255,255,255);
+doc.setFontSize(24);
+doc.text(title,18,25);
+
+doc.setFontSize(10);
+doc.setTextColor(150,170,195);
+doc.text(subtitle,18,33);
+
+let y=52;
+
+rows.forEach(row=>{
+
+doc.setFillColor(14,30,50);
+
+doc.roundedRect(
+15,y-7,180,17,3,3,"F"
+);
+
+doc.setTextColor(220,230,242);
+doc.setFontSize(10);
+doc.text(String(row[0]),21,y+4);
+
+doc.setTextColor(255,255,255);
+doc.setFontSize(11);
+doc.text(
+String(row[1]),
+184,y+4,
+{align:"right"}
+);
+
+y+=23;
+
+});
+
+doc.setFontSize(8);
+doc.setTextColor(120,145,170);
+
+doc.text(
+"Amar Hisab — Created & Designed by Tamim Hossain ❤️",
+105,288,
+{align:"center"}
+);
+
+}
+
+
+window.generatePDF=async()=>{
+
+try{
+
+const {jsPDF}=window.jspdf;
+
+const doc=new jsPDF();
+
+const t=totals();
+
+const bazarTotal=
+bazars.reduce(
+(s,x)=>s+Number(x.amount||0),0
+);
+
+const share=
+bazars.reduce(
+(s,x)=>
+s+
+Number(x.amount||0)/
+Math.max(Number(x.memberCount||members.length||1),1),
+0
+);
+
+
+/* PAGE 1 */
+
+const income=
+transactions
+.filter(x=>x.type==="income")
+.slice(0,12);
+
+pdfPage(
+doc,
+"Income",
+"Amar Hisab",
+income
+.map(x=>[
+dateText(x.date)+" • "+(x.category||"Income"),
+money(x.amount)
+])
+.concat([
+["Total Income",money(t.income)]
+])
+);
+
+
+/* PAGE 2 */
+
+doc.addPage();
+
+const expense=
+transactions
+.filter(x=>x.type==="expense")
+.slice(0,12);
+
+pdfPage(
+doc,
+"Expense",
+"Spending Report",
+expense
+.map(x=>[
+dateText(x.date)+" • "+(x.category||"Expense"),
+money(x.amount)
+])
+.concat([
+["Total Expense",money(t.expense)]
+])
+);
+
+
+/* PAGE 3 */
+
+doc.addPage();
+
+const remittance=
+transactions
+.filter(x=>x.type==="remittance")
+.slice(0,12);
+
+pdfPage(
+doc,
+"Remittance",
+"বাড়িতে পাঠানো",
+remittance
+.map(x=>[
+dateText(x.date)+" • "+(x.note||"Family"),
+money(x.amount)
+])
+.concat([
+["Total Remittance",money(t.remittance)]
+])
+);
+
+
+/* PAGE 4 */
+
+doc.addPage();
+
+const bazar=
+bazars.slice(0,12);
+
+pdfPage(
+doc,
+"Mess / Bazar",
+"Smart Mess Report",
+bazar
+.map(x=>[
+dateText(x.date)+" • "+(x.items||"Bazar"),
+money(x.amount)
+])
+.concat([
+["Total Bazar",money(bazarTotal)],
+["Mess-এ আমার ভাগ",money(share)]
+])
+);
+
+
+/* PAGE 5 */
+
+doc.addPage();
+
+pdfPage(
+doc,
+"Full Summary",
+"Amar Hisab Complete Report",
+[
+["Total Income",money(t.income)],
+["Total Expense",money(t.expense)],
+["Total Remittance",money(t.remittance)],
+["Borrowed",money(t.borrow)],
+["Lent",money(t.lend)],
+["Current Balance",money(balance())],
+["Mess-এ আমার ভাগ",money(share)],
+["Mess Members",String(members.length)]
+]
+);
+
+doc.setTextColor(180,220,255);
+doc.setFontSize(16);
+
+doc.text(
+"Created & Designed by Tamim Hossain",
+105,257,
+{align:"center"}
+);
+
+doc.setFontSize(12);
+doc.setTextColor(220,230,242);
+
+doc.text(
+"Made with ❤️ by Tamim Hossain",
+105,267,
+{align:"center"}
+);
+
+
+const blob=doc.output("blob");
+
+const file=new File(
+[blob],
+"Amar-Hisab-Report.pdf",
+{type:"application/pdf"}
+);
+
+if(
+navigator.share&&
+navigator.canShare&&
+navigator.canShare({files:[file]})
+){
+
+await navigator.share({
+title:"Amar Hisab Report",
+text:"My Amar Hisab financial report",
+files:[file]
+});
+
+}else{
+
+const url=URL.createObjectURL(blob);
+
+const a=document.createElement("a");
+
+a.href=url;
+a.download="Amar-Hisab-Report.pdf";
+
+a.click();
+
+setTimeout(
+()=>URL.revokeObjectURL(url),
+1000
+);
+
+toast("PDF তৈরি হয়েছে");
+
+}
+
+}catch(error){
+
+console.error(error);
+toast("PDF তৈরি করতে সমস্যা হয়েছে");
+
+}
+
+};
+
+
+/* =========================================================
+   RENDER ALL
+========================================================= */
+
+function renderAll(){
+
+renderDashboard();
+renderMess();
+renderHistory();
+renderInsights();
+
+}
+
+
+/* =========================================================
+   START SERVICE WORKER
+========================================================= */
+
+if("serviceWorker" in navigator){
+
+window.addEventListener(
+"load",
+()=>{
+navigator.serviceWorker
+.register("./sw.js")
+.catch(()=>{});
+}
+);
+
+}
 
 </script>
 
